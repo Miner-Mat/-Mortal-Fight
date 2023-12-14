@@ -318,9 +318,9 @@ while running:
                 final_x = user_screen_width - width_of_character
                 early_x2 = 0
                 final_x2 = user_screen_width - width_of_character
-                speed = 5
+                speed = 0.008 * user_screen_height
                 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-                speed2 = 5
+                speed2 = 0.008 * user_screen_height
                 current_frame = 0
                 current_frame_run = 0
                 current_frame_fight = 0
