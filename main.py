@@ -51,23 +51,19 @@ arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_
          pygame.transform.scale(pygame.image.load("arenas/location3.jpg"), (user_screen_width, user_screen_height)),
          pygame.transform.scale(pygame.image.load("arenas/location4.jpg"), (user_screen_width, user_screen_height))]
 
-# константы для отслеживания текущего окна
-MENU = 0
-FIGHT = 1
-
 width_of_character = anim_run[0].get_width()
 
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 early_x = 0
 final_x = user_screen_width - width_of_character
-speed = 0.008 * user_screen_height
+speed = 5
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 early_x2 = 0
 final_x2 = user_screen_width - width_of_character
-speed2 = 0.008 * user_screen_height
+speed2 = 5
 
 current_frame = 0  # текущий кадр стояния
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
@@ -92,6 +88,9 @@ right = True
 standing2 = True
 left2 = True
 right2 = False
+
+# Счетчик анимаций
+count = 6
 
 # Счетчик выбора арен
 arenas_count = 2
@@ -135,27 +134,22 @@ health = Healthbars()  # Объявляем класс хэлфбаров
 
 
 def frame_check():  # Проверка кадров
-    '''
-    Функция для смены кадров анимации
-    :return:
-    '''
     global current_frame, count, current_frame2, current_frame_fight
     if current_frame == 6:
         current_frame = 0
+    elif count % 6 == 0:
+        current_frame += 1
+        current_frame2 += 1
     if current_frame2 == 6:
         current_frame2 = 0
     if current_frame_fight == 4:
         current_frame_fight = 0
-    current_frame += 1
-    current_frame2 += 1
-    current_frame_fight += 1
+    elif count % 6 == 0:
+        current_frame_fight += 1
+    count += 1
 
 
 def key_check():  # Проверка нажатий
-    '''
-    Функция для проверки нажатий на клавиши для перемещения персонажей и их непосредственного перемещения
-    :return:
-    '''
     global x, current_frame_run, early_x, standing, right, left, speed, final_x
     global standing2, right2, left2, x2, current_frame_run2, speed2, early_x2, final_x2
     keys = pygame.key.get_pressed()
@@ -172,7 +166,7 @@ def key_check():  # Проверка нажатий
         right = False
         left = True
 
-    elif keys[pygame.K_d]:
+    if keys[pygame.K_d]:
         # Если персонаж передвинется вправо после следующего хода, проверяем не выйдет ли он за пределы
         if x + speed + width_of_character > final_x:  # Нужно вычесть ширину персонажа из final_x
             x = final_x - width_of_character
@@ -181,7 +175,6 @@ def key_check():  # Проверка нажатий
         current_frame_run = (current_frame_run + 1) % 8  # Изменим логику обновления кадров бега
         standing = False
         right = True
-        left = False
 
     if keys[pygame.K_LEFT]:
         if x2 - speed2 < early_x2:
@@ -198,7 +191,7 @@ def key_check():  # Проверка нажатий
         left2 = True
         right2 = False
 
-    elif keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT]:
         # Аналогично для второго персонажа
         if x2 + speed2 + width_of_character > final_x2:
             x2 = final_x2 - width_of_character
@@ -211,69 +204,49 @@ def key_check():  # Проверка нажатий
 
 
 def key_work():
-    '''
-    Функция для обработки нажатий на клавиши и запуска нужных анимаций
-    :return:
-    '''
     global current_health_2
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_f]:
-        if flag == FIGHT:
+        if flag:
             if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
-                current_health_2 -= 0.5
+                current_health_2 -= 5
 
     if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
         if left:
-            screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (0.09 * user_screen_width,
-                                                                              0.28 * user_screen_height)), (x, y))
+            screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (0.09 * user_screen_width, 0.28 * user_screen_height)), (x, y))
         if right:
-            screen.blit(pygame.transform.scale(anim_st[current_frame], (0.09 * user_screen_width, 0.28 *
-                                                                        user_screen_height)), (x, y))
+            screen.blit(pygame.transform.scale(anim_st[current_frame], (0.09 * user_screen_width, 0.28 * user_screen_height)), (x, y))
     elif keys[pygame.K_a]:
-        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame],
-                                                                 (0.14 * user_screen_width,
-                                                                  0.28 * user_screen_height)), True, False), (x, y))
+        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width, 0.28 * user_screen_height)), True, False),
+                    (x, y))
     elif keys[pygame.K_d]:
-        screen.blit(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width,
-                                                                     0.28 * user_screen_height)), (x, y))
+        screen.blit(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width, 0.28 * user_screen_height)), (x, y))
     elif keys[pygame.K_f]:
-        screen.blit(pygame.transform.scale(anim_fight[current_frame_fight], (0.14 * user_screen_width,
-                                                                             0.28 * user_screen_height)), (x, y))
+        screen.blit(pygame.transform.scale(anim_fight[current_frame_fight], (0.14 * user_screen_width, 0.28 * user_screen_height)), (x, y))
 
     if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
         if right2:
             screen.blit(
-                pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2],
-                                                             (0.09 * user_screen_width,
-                                                              0.28 * user_screen_height)), True, False),
+                pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2], (0.09 * user_screen_width, 0.28 * user_screen_height)), True, False),
                 (x2, y2))
         if left2:
-            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2],
-                                                                     (0.09 * user_screen_width,
-                                                                      0.28 * user_screen_height)), True, False),
+            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (0.09 * user_screen_width, 0.28 * user_screen_height)), True, False),
                         (x2, y2))
     elif keys[pygame.K_LEFT]:
-        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2],
-                                                                 (0.15 * user_screen_width,
-                                                                  0.28 * user_screen_height)), True, False),
+        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2], (0.15 * user_screen_width, 0.28 * user_screen_height)), True, False),
                     (x2, y2))
     elif keys[pygame.K_RIGHT]:
-        screen.blit(pygame.transform.scale(anim_run[current_frame2], (0.15 * user_screen_width,
-                                                                      0.28 * user_screen_height)), (x2, y2))
+        screen.blit(pygame.transform.scale(anim_run[current_frame2], (0.15 * user_screen_width, 0.28 * user_screen_height)), (x2, y2))
 
 
-UPDATE_FRAMES = pygame.USEREVENT + 1  # создаём событие для обновления кадров и присваиваем ему номер
-pygame.time.set_timer(UPDATE_FRAMES, 100)
-
-flag = MENU
+flag = False
 running = True  # флаг работы
-
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
     health.health_to_all(user_screen_width, user_screen_height, arens, current_health_1, current_health_2)
     arena = pygame.transform.scale(arens[arenas_count], (600, 400))
-    if flag == MENU:
+    if not flag:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, (0.31 * user_screen_width, 0.04 * user_screen_height))
         pygame.draw.rect(screen, (170, 0, 0), play_button)
@@ -286,7 +259,7 @@ while running:
         screen.blit(left_strelka, (0.05 * user_screen_width, 0.68 * user_screen_height))
         screen.blit(right_strelka, (0.43 * user_screen_width, 0.67 * user_screen_height))
 
-    elif flag == FIGHT:
+    if flag:
         health.health_bar(user_screen_width, user_screen_height, arens, arenas_count, current_health_1, current_health_2)
         key_check()  # вызываем проверку нажатий
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
@@ -294,14 +267,14 @@ while running:
         screen.blit(back_image, back_image_rect)
 
         key_work()  # вызываем обработку нажатий
-
+        frame_check()  # вызываем проверку кадров
     pygame.display.update()  # обновляем окно
 
     # Скрипт выхода из игры
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
-                flag = FIGHT
+                flag = True
             elif left_strelka_rect.collidepoint(event.pos):
                 arenas_count -= 1
                 if arenas_count < 0:
@@ -311,7 +284,7 @@ while running:
                 if arenas_count >= len(arens):
                     arenas_count = 0
             elif back_button.collidepoint(event.pos):
-                flag = MENU
+                flag = False
                 # Сбрасываем значения всех переменных до по умолчанию
                 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
                 early_x = 0
@@ -340,9 +313,6 @@ while running:
 
             elif exit_button.collidepoint(event.pos):
                 running = False
-
-        if event.type == UPDATE_FRAMES:
-            frame_check()  # вызываем проверку кадров
 
         if event.type == pygame.QUIT:
             running = False
