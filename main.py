@@ -55,7 +55,7 @@ arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_
 MENU = 0
 FIGHT = 1
 
-width_of_character = anim_run[0].get_width()
+width_of_character = pygame.transform.scale(anim_run[0], (0.07 * user_screen_width, 0.28 * user_screen_height)).get_width()
 
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
@@ -209,19 +209,19 @@ def key_check():  # Проверка нажатий
         left2 = False
         right2 = True
 
+fight1 = False
+fight_enabled = True
+fight_cool_down = 1000  # время в милисекундах во время которого атака не может быть совершена снова
+last_fight_time = 0  # метка последней атаки
 
 def key_work():
     '''
     Функция для обработки нажатий на клавиши и запуска нужных анимаций
     :return:
     '''
-    global current_health_2
+    global current_health_2, fight_enabled, last_fight_time, current_frame_fight, fight1
     keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_f]:
-        if flag == FIGHT:
-            if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
-                current_health_2 -= 0.5
+    current_time = pygame.time.get_ticks()
 
     if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
         if left:
@@ -237,9 +237,27 @@ def key_work():
     elif keys[pygame.K_d]:
         screen.blit(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width,
                                                                      0.28 * user_screen_height)), (x, y))
-    elif keys[pygame.K_f]:
-        screen.blit(pygame.transform.scale(anim_fight[current_frame_fight], (0.14 * user_screen_width,
-                                                                             0.28 * user_screen_height)), (x, y))
+    if fight_enabled:
+        if keys[pygame.K_f]:
+            fight1 = True
+            fight_enabled = False
+            last_fight_time = current_time
+
+            if flag == FIGHT:
+                if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
+                    current_health_2 -= 0.8
+                    animation_img = anim_fight[current_frame_fight]
+                    animation_img_scaled = pygame.transform.scale(animation_img,
+                                                                  (0.2 * user_screen_width, 0.28 * user_screen_height))
+                    # Если персонаж смотрит влево, отражаем изображение по горизонтали
+                    if left:
+                        animation_img_scaled = pygame.transform.flip(animation_img_scaled, True, False)
+                    screen.blit(animation_img_scaled, (x, y))
+        else:
+            fight1 = False
+
+    if not fight_enabled and current_time - last_fight_time >= fight_cool_down:
+        fight_enabled = True
 
     if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
         if right2:
