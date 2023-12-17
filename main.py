@@ -218,7 +218,7 @@ def key_work():
             last_fight_time = current_time
 
             if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
-                current_health_2 -= 0.8
+                current_health_2 -= 5
     else:
         animation_img = anim_fight[current_frame_fight]
         animation_img_scaled = pygame.transform.scale(animation_img,
