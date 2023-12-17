@@ -4,6 +4,8 @@ from healthbars import Healthbars  # Импортируем класс Healthbar
 # Инициализация Pygame
 pygame.init()
 
+from animations import *
+
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
@@ -17,39 +19,6 @@ pygame.mixer.init()  # инициализируем функцию добавл�
 pygame.mixer.music.load("music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
-
-# Анимации персонажа в момент неподвижности вправо
-anim_st = [pygame.image.load("Character_st/1st.png"),
-           pygame.image.load("Character_st/2st.png"),
-           pygame.image.load("Character_st/3st.png"),
-           pygame.image.load("Character_st/4st.png"),
-           pygame.image.load("Character_st/5st.png"),
-           pygame.image.load("Character_st/6st.png"),
-           pygame.image.load("Character_st/7st.png")]
-
-# Анимации персонажа в момент неподвижности влево
-minus_anim_st = [pygame.image.load("-Character_st/1st.png"), pygame.image.load("-Character_st/2st.png"),
-                 pygame.image.load("-Character_st/3st.png"), pygame.image.load("-Character_st/4st.png"),
-                 pygame.image.load("-Character_st/5st.png"), pygame.image.load("-Character_st/6st.png"),
-                 pygame.image.load("-Character_st/7st.png")]
-
-# Анимации персонажа во время атаки
-anim_fight = [pygame.image.load("Character_fight/Attack_1.png"), pygame.image.load("Character_fight/Attack_2.png"),
-              pygame.image.load("Character_fight/Attack_3.png"), pygame.image.load("Character_fight/Attack_4.png"),
-              pygame.image.load("Character_fight/Attack_5.png")]
-
-# Анимации персонажа во время бега
-anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charact_run/run2.png"),
-            pygame.image.load("charact_run/run3.png"), pygame.image.load("charact_run/run4.png"),
-            pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
-            pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
-
-# Арены для сражения
-arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location2.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location1.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location3.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location4.jpg"), (user_screen_width, user_screen_height))]
 
 # константы для отслеживания текущего окна
 MENU = 0
@@ -131,6 +100,7 @@ left_strelka = pygame.transform.scale(pygame.image.load("left_strelka.png"), (0.
 left_strelka_rect = left_strelka.get_rect(topleft=(0.05 * user_screen_width, 0.68 * user_screen_height))
 right_strelka = pygame.transform.scale(pygame.image.load("right_strelka.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
 right_strelka_rect = right_strelka.get_rect(topleft=(0.44 * user_screen_width, 0.67 * user_screen_height))
+
 health = Healthbars()  # Объявляем класс хэлфбаров
 
 
@@ -209,10 +179,12 @@ def key_check():  # Проверка нажатий
         left2 = False
         right2 = True
 
+
 fight1 = False
 fight_enabled = True
 fight_cool_down = 1000  # время в милисекундах во время которого атака не может быть совершена снова
 last_fight_time = 0  # метка последней атаки
+
 
 def key_work():
     '''
@@ -221,6 +193,7 @@ def key_work():
     '''
     global current_health_2, fight_enabled, last_fight_time, current_frame_fight, fight1
     keys = pygame.key.get_pressed()
+
     current_time = pygame.time.get_ticks()
 
     if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
@@ -282,7 +255,7 @@ def key_work():
 
 
 UPDATE_FRAMES = pygame.USEREVENT + 1  # создаём событие для обновления кадров и присваиваем ему номер
-pygame.time.set_timer(UPDATE_FRAMES, 100)
+pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 
 flag = MENU
 running = True  # флаг работы
