@@ -31,12 +31,14 @@ x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 early_x = 0
 final_x = user_screen_width - width_of_character
 speed = 0.008 * user_screen_height
+power = 5
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 early_x2 = 0
 final_x2 = user_screen_width - width_of_character
 speed2 = 0.008 * user_screen_height
+power2 = 5
 
 current_frame = 0  # текущий кадр стояния
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
@@ -149,12 +151,12 @@ def key_check():  # Проверка нажатий
             x = final_x - width_of_character
         else:
             x += speed
-        current_frame_run = (current_frame_run + 1) % 8  # Изменим логику обновления кадров бега
+        current_frame_run = current_frame_run + 1  # Изменим логику обновления кадров бега
         standing = False
         right = True
         left = False
 
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_j]:
         if x2 - speed2 < early_x2:
             x2 = early_x2
             if current_frame_run2 == 0:
@@ -169,7 +171,7 @@ def key_check():  # Проверка нажатий
         left2 = True
         right2 = False
 
-    elif keys[pygame.K_RIGHT]:
+    elif keys[pygame.K_l]:
         # Аналогично для второго персонажа
         if x2 + speed2 + width_of_character > final_x2:
             x2 = final_x2 - width_of_character
@@ -198,18 +200,18 @@ def key_work():
     current_time = pygame.time.get_ticks()
 
     if not fight1:
-        if not keys[pygame.K_a] and not keys[pygame.K_d] and not fight1:
+        if not keys[pygame.K_a] and not keys[pygame.K_d]:
             if left:
                 screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (0.09 * user_screen_width,
                                                                                   0.28 * user_screen_height)), (x, y))
             if right:
                 screen.blit(pygame.transform.scale(anim_st[current_frame], (0.09 * user_screen_width, 0.28 *
                                                                             user_screen_height)), (x, y))
-        elif keys[pygame.K_a] and not fight1:
+        elif keys[pygame.K_a]:
             screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame],
                                                                      (0.14 * user_screen_width,
                                                                       0.28 * user_screen_height)), True, False), (x, y))
-        elif keys[pygame.K_d] and not fight1:
+        elif keys[pygame.K_d]:
             screen.blit(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width,
                                                                          0.28 * user_screen_height)), (x, y))
         if keys[pygame.K_f] and fight_enabled:
@@ -217,8 +219,9 @@ def key_work():
             fight_enabled = False
             last_fight_time = current_time
 
-            if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
-                current_health_2 -= 5
+            if (x < x2 and right is True and x2 - x <= 200 or x > x2 and left is True and x - x2 <= 200)\
+                    and y2 - 200 <= y <= y2 + 200:
+                current_health_2 -= power
     else:
         animation_img = anim_fight[current_frame_fight]
         animation_img_scaled = pygame.transform.scale(animation_img,
@@ -235,24 +238,23 @@ def key_work():
     if not fight_enabled and current_time - last_fight_time >= fight_cool_down:
         fight_enabled = True
 
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+    if not keys[pygame.K_j] and not keys[pygame.K_l]:
         if right2:
             screen.blit(
                 pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2],
                                                              (0.09 * user_screen_width,
-                                                              0.28 * user_screen_height)), True, False),
-                (x2, y2))
+                                                              0.28 * user_screen_height)), True, False), (x2, y2))
         if left2:
-            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2],
-                                                                     (0.09 * user_screen_width,
-                                                                      0.28 * user_screen_height)), True, False),
-                        (x2, y2))
-    elif keys[pygame.K_LEFT]:
+            screen.blit(
+                pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2],
+                                                             (0.09 * user_screen_width,
+                                                              0.28 * user_screen_height)), True, False), (x2, y2))
+    elif keys[pygame.K_j]:
         screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2],
                                                                  (0.15 * user_screen_width,
                                                                   0.28 * user_screen_height)), True, False),
                     (x2, y2))
-    elif keys[pygame.K_RIGHT]:
+    elif keys[pygame.K_l]:
         screen.blit(pygame.transform.scale(anim_run[current_frame2], (0.15 * user_screen_width,
                                                                       0.28 * user_screen_height)), (x2, y2))
 
