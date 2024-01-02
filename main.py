@@ -67,7 +67,7 @@ right2 = False
 # Счетчик выбора арен
 arenas_count = 2
 
-# Текст - загаловок игры на входном экране
+# Текст - заголовок игры на входном экране
 game_entery_name = pygame.font.Font("Fonts/unispace bd.ttf", int((0.33 * user_screen_width) // (0.36 * user_screen_width // 100)))
 text_surface = game_entery_name.render("MORTAL FIGHT", True, (255, 107, 107))
 
@@ -105,21 +105,18 @@ right_strelka_rect = right_strelka.get_rect(topleft=(0.44 * user_screen_width, 0
 
 health = Healthbars()  # Объявляем класс хэлфбаров
 
+heroes = pygame.sprite.Group()
+
 
 def frame_check():  # Проверка кадров
     '''
     Функция для смены кадров анимации
     :return:
     '''
-    global current_frame, count, current_frame2, current_frame_fight, fight1
-    if current_frame == 6:
-        current_frame = 0
-    if current_frame2 == 6:
-        current_frame2 = 0
-    if current_frame_fight == 4:
-        current_frame_fight = 0
-    current_frame += 1
-    current_frame2 += 1
+    global current_frame, count, current_frame2, current_frame_fight, fight1, anim_st, anim_fight
+    current_frame = (current_frame + 1) % len(anim_st)
+    current_frame2 = (current_frame2 + 1) % len(anim_st)
+    current_frame_fight = (current_frame_fight + 1) % len(anim_fight)
     if fight1:
         current_frame_fight += 1
 

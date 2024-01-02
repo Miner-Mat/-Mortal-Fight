@@ -17,7 +17,8 @@ class Healthbars():
             pygame.draw.rect(i, (0, 255, 0),
                              (0.8 * user_screen_width, 0.02 * user_screen_height, current_health_2 * 3, 40))
 
-    def health_bar(self, user_screen_width, user_screen_height, arens, arenas_count, current_health_1, current_health_2):  # Отрисовка хэлф баров
+    def health_bar(self, user_screen_width, user_screen_height, arens, arenas_count,
+                   current_health_1, current_health_2):  # Отрисовка хэлф баров
         pygame.draw.rect(arens[arenas_count], (255, 255, 255),
                          (0.02 * user_screen_width - 2, 0.02 * user_screen_height - 2,
                           100 * 3 + 4, 44))

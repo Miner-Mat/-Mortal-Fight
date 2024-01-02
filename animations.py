@@ -5,19 +5,13 @@ user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
 
 # Анимации персонажа в момент неподвижности вправо
-anim_st = [pygame.image.load("Character_st/1st.png"),
+anim_stay = [pygame.image.load("Character_st/1st.png"),
            pygame.image.load("Character_st/2st.png"),
            pygame.image.load("Character_st/3st.png"),
            pygame.image.load("Character_st/4st.png"),
            pygame.image.load("Character_st/5st.png"),
            pygame.image.load("Character_st/6st.png"),
            pygame.image.load("Character_st/7st.png")]
-
-# Анимации персонажа в момент неподвижности влево
-minus_anim_st = [pygame.image.load("-Character_st/1st.png"), pygame.image.load("-Character_st/2st.png"),
-                 pygame.image.load("-Character_st/3st.png"), pygame.image.load("-Character_st/4st.png"),
-                 pygame.image.load("-Character_st/5st.png"), pygame.image.load("-Character_st/6st.png"),
-                 pygame.image.load("-Character_st/7st.png")]
 
 # Анимации персонажа во время атаки
 anim_fight = [pygame.image.load("Character_fight/Attack_1.png"), pygame.image.load("Character_fight/Attack_2.png"),
