@@ -6,12 +6,17 @@ from constants_for_hero import *
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y, speed, fight_cool_down, *groups, direction='right'):
         super().__init__(*groups)
-        self.anim_stay = anim_stay
-        self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in anim_stay]
-        self.anim_fight = anim_fight
-        self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in anim_fight]
-        self.anim_run = anim_run
-        self.anim_run_l = [pygame.transform.flip(el, True, False) for el in anim_run]
+        self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height))\
+                          for el in anim_stay]
+        self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
+
+        self.anim_fight = [pygame.transform.scale(el, (0.17 * user_screen_width, 0.28 * user_screen_height))\
+                           for el in anim_fight]
+        self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
+
+        self.anim_run = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))\
+                         for el in anim_run]
+        self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
 
         self.cur_frame_stay = 0
         self.cur_frame_fight = 0
