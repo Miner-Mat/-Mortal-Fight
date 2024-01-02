@@ -1,8 +1,7 @@
 RUN = 0
-STAY = 1
-JUMP = 2
-FIGHT = 3
-SQUAT = 4
+JUMP = 1
+FIGHT = 2
+SQUAT = 3
 
-LEFT = 5
-RIGHT = 6
+LEFT = 4
+RIGHT = 5

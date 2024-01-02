@@ -1,10 +1,14 @@
 import pygame  # импортируем pygame
 from healthbars import Healthbars  # Импортируем класс Healthbars
+from constants_for_hero import *
 
 # Инициализация Pygame
 pygame.init()
 
-from animations import *
+
+from hero import Hero
+from arens import arens
+
 
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
@@ -21,48 +25,24 @@ pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
 # константы для отслеживания текущего окна
-MENU = 0
-FIGHT = 1
-
-width_of_character = pygame.transform.scale(anim_run[0], (0.07 * user_screen_width, 0.28 * user_screen_height)).get_width()
+MENU_WINDOW = 0
+FIGHT_WINDOW = 1
 
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-early_x = 0
-final_x = user_screen_width - width_of_character
 speed = 0.008 * user_screen_height
 power = 5
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-early_x2 = 0
-final_x2 = user_screen_width - width_of_character
 speed2 = 0.008 * user_screen_height
 power2 = 5
-
-current_frame = 0  # текущий кадр стояния
-current_frame_run = 0  # последний обновлённый кадр бега персонажа
-current_frame_fight = 0
-animation_delay = 100  # Задержка между кадрами
-
-
-current_frame2 = 0
-current_frame_run2 = 0
 
 clock = pygame.time.Clock()
 
 # Значения хэлф баров
 current_health_1 = 100
 current_health_2 = 100
-
-# Флаги состояния положения персонажа
-standing = True
-left = False
-right = True
-
-standing2 = True
-left2 = True
-right2 = False
 
 # Счетчик выбора арен
 arenas_count = 2
@@ -107,166 +87,63 @@ health = Healthbars()  # Объявляем класс хэлфбаров
 
 heroes = pygame.sprite.Group()
 
-
-def frame_check():  # Проверка кадров
-    '''
-    Функция для смены кадров анимации
-    :return:
-    '''
-    global current_frame, count, current_frame2, current_frame_fight, fight1, anim_st, anim_fight
-    current_frame = (current_frame + 1) % len(anim_st)
-    current_frame2 = (current_frame2 + 1) % len(anim_st)
-    current_frame_fight = (current_frame_fight + 1) % len(anim_fight)
-    if fight1:
-        current_frame_fight += 1
+hero1 = Hero(x, y, speed, 1000, heroes, direction='right')
+hero2 = Hero(x2, y2, speed2, 1000, heroes, direction='left')
 
 
 def key_check():  # Проверка нажатий
     '''
-    Функция для проверки нажатий на клавиши для перемещения персонажей и их непосредственного перемещения
+    Функция для проверки нажатий на клавиши и их обработки
     :return:
     '''
-    global x, current_frame_run, early_x, standing, right, left, speed, final_x
-    global standing2, right2, left2, x2, current_frame_run2, speed2, early_x2, final_x2
     keys = pygame.key.get_pressed()
+    res1 = []  # списки с флагами, которые передадим в классы персонажей
+    res2 = []
     if keys[pygame.K_a]:
-        if x - speed < early_x:
-            x = early_x
-            current_frame_run += 1
-        else:
-            x -= speed
-            current_frame_run += 1
-        if current_frame_run == 7:
-            current_frame_run = 0
-        standing = False
-        right = False
-        left = True
-
-    elif keys[pygame.K_d]:
-        # Если персонаж передвинется вправо после следующего хода, проверяем не выйдет ли он за пределы
-        if x + speed + width_of_character > final_x:  # Нужно вычесть ширину персонажа из final_x
-            x = final_x - width_of_character
-        else:
-            x += speed
-        current_frame_run = current_frame_run + 1  # Изменим логику обновления кадров бега
-        standing = False
-        right = True
-        left = False
+        res1.append(LEFT)
+        res1.append(RUN)
+    if keys[pygame.K_d]:
+        res1.append(RIGHT)
+        res1.append(RUN)
+    if keys[pygame.K_w]:
+        res1.append(JUMP)
+    if keys[pygame.K_s]:
+        res1.append(SQUAT)
+    if keys[pygame.K_f]:
+        res1.append(FIGHT)
 
     if keys[pygame.K_j]:
-        if x2 - speed2 < early_x2:
-            x2 = early_x2
-            if current_frame_run2 == 0:
-                current_frame_run2 = 7
-            current_frame_run2 -= 1
-        else:
-            x2 -= speed2
-            if current_frame_run2 == 0:
-                current_frame_run2 = 7
-            current_frame_run2 -= 1
-        standing2 = False
-        left2 = True
-        right2 = False
+        res2.append(LEFT)
+        res2.append(RUN)
+    if keys[pygame.K_l]:
+        res2.append(RIGHT)
+        res2.append(RUN)
+    if keys[pygame.K_i]:
+        res2.append(JUMP)
+    if keys[pygame.K_k]:
+        res2.append(SQUAT)
+    if keys[pygame.K_h]:
+        res2.append(FIGHT_WINDOW)
 
-    elif keys[pygame.K_l]:
-        # Аналогично для второго персонажа
-        if x2 + speed2 + width_of_character > final_x2:
-            x2 = final_x2 - width_of_character
-        else:
-            x2 += speed2
-        current_frame_run2 = (current_frame_run2 + 1) % 8
-        standing2 = False
-        left2 = False
-        right2 = True
+    hero1.process_events(res1)
+    hero2.process_events(res2)
+
+    hero1.move()
+    hero2.move()
 
 
-fight1 = False
-fight_enabled = True
-fight_cool_down = 1000  # время в милисекундах во время которого атака не может быть совершена снова
-last_fight_time = 0  # метка последней атаки
-
-
-def key_work():
-    '''
-    Функция для обработки нажатий на клавиши и запуска нужных анимаций
-    :return:
-    '''
-    global current_health_2, fight_enabled, last_fight_time, current_frame_fight, fight1
-    keys = pygame.key.get_pressed()
-
-    current_time = pygame.time.get_ticks()
-
-    if not fight1:
-        if not keys[pygame.K_a] and not keys[pygame.K_d]:
-            if left:
-                screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (0.09 * user_screen_width,
-                                                                                  0.28 * user_screen_height)), (x, y))
-            if right:
-                screen.blit(pygame.transform.scale(anim_st[current_frame], (0.09 * user_screen_width, 0.28 *
-                                                                            user_screen_height)), (x, y))
-        elif keys[pygame.K_a]:
-            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame],
-                                                                     (0.14 * user_screen_width,
-                                                                      0.28 * user_screen_height)), True, False), (x, y))
-        elif keys[pygame.K_d]:
-            screen.blit(pygame.transform.scale(anim_run[current_frame], (0.14 * user_screen_width,
-                                                                         0.28 * user_screen_height)), (x, y))
-        if keys[pygame.K_f] and fight_enabled:
-            fight1 = True
-            fight_enabled = False
-            last_fight_time = current_time
-
-            if (x < x2 and right is True and x2 - x <= 200 or x > x2 and left is True and x - x2 <= 200)\
-                    and y2 - 200 <= y <= y2 + 200:
-                current_health_2 -= power
-    else:
-        animation_img = anim_fight[current_frame_fight]
-        animation_img_scaled = pygame.transform.scale(animation_img,
-                                                      (0.2 * user_screen_width, 0.28 * user_screen_height))
-        # Если персонаж смотрит влево, отражаем изображение по горизонтали
-        if left:
-            animation_img_scaled = pygame.transform.flip(animation_img_scaled, True, False)
-        screen.blit(animation_img_scaled, (x, y))
-
-        if current_frame_fight == len(anim_fight) - 1:
-            fight1 = False
-            current_frame_fight = 0
-
-    if not fight_enabled and current_time - last_fight_time >= fight_cool_down:
-        fight_enabled = True
-
-    if not keys[pygame.K_j] and not keys[pygame.K_l]:
-        if right2:
-            screen.blit(
-                pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2],
-                                                             (0.09 * user_screen_width,
-                                                              0.28 * user_screen_height)), True, False), (x2, y2))
-        if left2:
-            screen.blit(
-                pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2],
-                                                             (0.09 * user_screen_width,
-                                                              0.28 * user_screen_height)), True, False), (x2, y2))
-    elif keys[pygame.K_j]:
-        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2],
-                                                                 (0.15 * user_screen_width,
-                                                                  0.28 * user_screen_height)), True, False),
-                    (x2, y2))
-    elif keys[pygame.K_l]:
-        screen.blit(pygame.transform.scale(anim_run[current_frame2], (0.15 * user_screen_width,
-                                                                      0.28 * user_screen_height)), (x2, y2))
-
-
+animation_delay = 100
 UPDATE_FRAMES = pygame.USEREVENT + 1  # создаём событие для обновления кадров и присваиваем ему номер
 pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 
-flag = MENU
+flag = MENU_WINDOW
 running = True  # флаг работы
 
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
     health.health_to_all(user_screen_width, user_screen_height, arens, current_health_1, current_health_2)
     arena = pygame.transform.scale(arens[arenas_count], (600, 400))
-    if flag == MENU:
+    if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, (0.31 * user_screen_width, 0.04 * user_screen_height))
         pygame.draw.rect(screen, (170, 0, 0), play_button)
@@ -279,14 +156,15 @@ while running:
         screen.blit(left_strelka, (0.05 * user_screen_width, 0.68 * user_screen_height))
         screen.blit(right_strelka, (0.43 * user_screen_width, 0.67 * user_screen_height))
 
-    elif flag == FIGHT:
+    elif flag == FIGHT_WINDOW:
         health.health_bar(user_screen_width, user_screen_height, arens, arenas_count, current_health_1, current_health_2)
-        key_check()  # вызываем проверку нажатий
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
         pygame.draw.rect(screen, (170, 0, 0), back_button)
         screen.blit(back_image, back_image_rect)
 
-        key_work()  # вызываем обработку нажатий
+        key_check()  # вызываем проверку нажатий
+
+        heroes.draw(screen)
 
     pygame.display.update()  # обновляем окно
 
@@ -294,7 +172,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
-                flag = FIGHT
+                flag = FIGHT_WINDOW
             elif left_strelka_rect.collidepoint(event.pos):
                 arenas_count -= 1
                 if arenas_count < 0:
@@ -303,39 +181,15 @@ while running:
                 arenas_count += 1
                 if arenas_count >= len(arens):
                     arenas_count = 0
+
             elif back_button.collidepoint(event.pos):
-                flag = MENU
-                # Сбрасываем значения всех переменных до по умолчанию
-                x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-                early_x = 0
-                final_x = user_screen_width - width_of_character
-                early_x2 = 0
-                final_x2 = user_screen_width - width_of_character
-                speed = 0.008 * user_screen_height
-                x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-                speed2 = 0.008 * user_screen_height
-                current_frame = 0
-                current_frame_run = 0
-                current_frame_fight = 0
-                animation_delay = 100
-                last_update = pygame.time.get_ticks()
-                current_frame2 = 0
-                current_frame_run2 = 0
-                current_health_1 = 100
-                current_health_2 = 100
-                standing = True
-                left = False
-                right = True
-                standing2 = True
-                left2 = True
-                right2 = False
-                count = 6
+                flag = MENU_WINDOW
 
             elif exit_button.collidepoint(event.pos):
                 running = False
 
         if event.type == UPDATE_FRAMES:
-            frame_check()  # вызываем проверку кадров
+            heroes.update()
 
         if event.type == pygame.QUIT:
             running = False

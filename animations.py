@@ -23,10 +23,3 @@ anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charac
             pygame.image.load("charact_run/run3.png"), pygame.image.load("charact_run/run4.png"),
             pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
             pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
-
-# Арены для сражения
-arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location2.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location1.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location3.jpg"), (user_screen_width, user_screen_height)),
-         pygame.transform.scale(pygame.image.load("arenas/location4.jpg"), (user_screen_width, user_screen_height))]
