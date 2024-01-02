@@ -4,7 +4,18 @@ from constants_for_hero import *
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed, fight_cool_down, *groups, direction='right'):
+    '''
+    Класс персонаж
+    '''
+    def __init__(self, x, y, ground, speed, power, jump_power, fight_cool_down, *groups, direction=RIGHT):
+        '''
+        :param x: координата х левого верхнего угла
+        :param y: координата у левого верхнего угла
+        :param speed: скорость персноажа за одну итерацию
+        :param fight_cool_down: время в миллисекундах, которое игрок не сможет атаковать после использования атаки
+        :param groups: группы спрайтов
+        :param direction: направление персонажа. Константа программы constants_for_hero
+        '''
         super().__init__(*groups)
         self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height))\
                           for el in anim_stay]
@@ -21,12 +32,15 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame_stay = 0
         self.cur_frame_fight = 0
         self.cur_frame_run = 0
+        self.cur_frame_jump = 0
+        self.cur_frame_squat = 0
+
         self.is_run = False
         self.is_fight = False
         self.is_jump = False
         self.is_squat = False
 
-        if direction == 'left':
+        if direction == LEFT:
             self.left = True
             self.right = False
         else:
@@ -36,17 +50,29 @@ class Hero(pygame.sprite.Sprite):
         self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
+        self.ground = ground
 
         self.fight_enabled = True
 
         self.speed = speed
+        self.power = power
+        self.jump_power = jump_power
+
+        self.jump_speed = 0
 
         self.clock = pygame.time.Clock()
+        self.time_jump = 0
 
         self.fight_cool_down = fight_cool_down
         self.last_fight_time = 0
 
+        self.jump_enable = True
+
     def frame_swap(self):
+        '''
+        Метод, который сменяет счетчики анимаций
+        :return:
+        '''
         self.cur_frame_stay = (self.cur_frame_stay + 1) % len(self.anim_stay)
         self.cur_frame_run = (self.cur_frame_run + 1) % len(self.anim_run)
         if self.is_fight:
@@ -56,6 +82,10 @@ class Hero(pygame.sprite.Sprite):
                 self.is_fight = False
 
     def image_swap(self):
+        '''
+        Метод присваивает спрайту картинку в зависимости от счетччика анимаций и флагов состояния персонажа
+        :return:
+        '''
         if self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]
@@ -69,6 +99,11 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
 
     def process_events(self, flags):
+        '''
+        Метод для обработки событий
+        :param flags: список из констант, содержащихся в программе constants_for_hero
+        :return:
+        '''
         current_time = pygame.time.get_ticks()
 
         if RUN in flags:
@@ -77,9 +112,9 @@ class Hero(pygame.sprite.Sprite):
             self.is_run = False
 
         # далее непрерываемые процессы
-        # if JUMP in flags:
-        #     self.is_jump = True
-        #
+        if JUMP in flags:
+            self.is_jump = True
+
         # if SQUAT in flags:
         #     self.is_squat = True
 
@@ -101,6 +136,10 @@ class Hero(pygame.sprite.Sprite):
             self.right = True
 
     def move(self):
+        '''
+        Метод для передвижения персонажа в зависимости от флагов состояния
+        :return:
+        '''
         if self.is_run:
             if self.left:
                 if self.rect.x - self.speed > 0:
@@ -112,7 +151,28 @@ class Hero(pygame.sprite.Sprite):
                     self.rect = self.rect.move(self.speed, 0)
                 else:
                     self.rect.x = user_screen_width - self.rect.width
+        if self.is_jump:
+            if self.jump_enable:
+
+                self.jump_speed = -self.jump_power
+                self.jump_enable = False
+
+            if self.rect.y + self.rect.height + self.jump_speed < self.ground:
+                self.rect = self.rect.move(0, self.jump_speed)
+                self.jump_speed += 1
+            else:
+                self.rect.y = self.ground - self.rect.height
+
+            if self.rect.y + self.rect.height == self.ground:
+                self.jump_speed = 0
+                self.jump_enable = True
+                self.is_jump = False
 
     def update(self):
+        '''
+        Обновление
+        Метод запускает смену счетчика анимаций, а так же присваивание нужной ккартинки
+        :return:
+        '''
         self.frame_swap()
         self.image_swap()

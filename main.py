@@ -28,15 +28,19 @@ pygame.mixer.music.play(-1)  # Запускаем бесконечный цик�
 MENU_WINDOW = 0
 FIGHT_WINDOW = 1
 
+ground = int(0.94 * user_screen_height)
+
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-speed = 0.008 * user_screen_height
+speed = 0.015 * user_screen_height
 power = 5
+jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-speed2 = 0.008 * user_screen_height
+speed2 = 0.015 * user_screen_height
 power2 = 5
+jump_power2 = 20
 
 clock = pygame.time.Clock()
 
@@ -87,8 +91,8 @@ health = Healthbars()  # Объявляем класс хэлфбаров
 
 heroes = pygame.sprite.Group()
 
-hero1 = Hero(x, y, speed, 1000, heroes, direction='right')
-hero2 = Hero(x2, y2, speed2, 1000, heroes, direction='left')
+hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
+hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
 
 
 def key_check():  # Проверка нажатий
