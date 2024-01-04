@@ -21,7 +21,7 @@ class Hero(pygame.sprite.Sprite):
                           for el in anim_stay]
         self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
 
-        self.anim_fight = [pygame.transform.scale(el, (0.17 * user_screen_width, 0.28 * user_screen_height))\
+        self.anim_fight = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))\
                            for el in anim_fight]
         self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
 
@@ -29,7 +29,7 @@ class Hero(pygame.sprite.Sprite):
                          for el in anim_run]
         self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
 
-        self.anim_jump = [pygame.transform.scale(el, (0.17 * user_screen_width, 0.28 * user_screen_height))
+        self.anim_jump = [pygame.transform.scale(el, (0.22 * user_screen_width, 0.28 * user_screen_height))
                           for el in anim_jump]
         self.anim_jump_l = [pygame.transform.flip(el, True, False) for el in self.anim_jump]
 
@@ -79,7 +79,6 @@ class Hero(pygame.sprite.Sprite):
         '''
         self.cur_frame_stay = (self.cur_frame_stay + 1) % len(self.anim_stay)
         self.cur_frame_run = (self.cur_frame_run + 1) % len(self.anim_run)
-        self.cur_frame_jump = (self.cur_frame_jump + 1) % len(self.anim_jump)
         if self.is_fight:
             self.cur_frame_fight += 1
             if self.cur_frame_fight == len(self.anim_fight):
@@ -89,7 +88,6 @@ class Hero(pygame.sprite.Sprite):
             self.cur_frame_jump += 1
             if self.cur_frame_jump == len(self.anim_jump):
                 self.cur_frame_jump = 0
-                self.is_jump = False
 
     def image_swap(self):
         '''
@@ -164,7 +162,6 @@ class Hero(pygame.sprite.Sprite):
                     self.rect.x = user_screen_width - self.rect.width
         if self.is_jump:
             if self.jump_enable:
-
                 self.jump_speed = -self.jump_power
                 self.jump_enable = False
 
@@ -178,6 +175,7 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_speed = 0
                 self.jump_enable = True
                 self.is_jump = False
+                self.cur_frame_jump = 0
 
     def update(self):
         '''
@@ -185,5 +183,5 @@ class Hero(pygame.sprite.Sprite):
         Метод запускает смену счетчика анимаций, а так же присваивание нужной ккартинки
         :return:
         '''
-        self.frame_swap()
         self.image_swap()
+        self.frame_swap()

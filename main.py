@@ -33,13 +33,13 @@ ground = int(0.94 * user_screen_height)
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 speed = 0.015 * user_screen_height
-power = 5
+power = 10
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 speed2 = 0.015 * user_screen_height
-power2 = 5
+power2 = 10
 jump_power2 = 20
 
 clock = pygame.time.Clock()
@@ -127,7 +127,7 @@ def key_check():  # Проверка нажатий
     if keys[pygame.K_k]:
         res2.append(SQUAT)
     if keys[pygame.K_h]:
-        res2.append(FIGHT_WINDOW)
+        res2.append(FIGHT)
 
     hero1.process_events(res1)
     hero2.process_events(res2)
