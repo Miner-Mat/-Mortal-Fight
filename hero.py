@@ -11,8 +11,12 @@ class Hero(pygame.sprite.Sprite):
         '''
         :param x: координата х левого верхнего угла
         :param y: координата у левого верхнего угла
+        :param ground: у координата земли
         :param speed: скорость персонажа за одну итерацию
+        :param power: сила удара
+        :param jump_power: начальная скорость прыжка в пикселях
         :param fight_cool_down: время в миллисекундах, которое игрок не сможет атаковать после использования атаки
+        :param enemy_group: группа спрайтов противников
         :param groups: группы спрайтов
         :param direction: направление персонажа. Константа программы constants_for_hero
         '''
@@ -20,18 +24,33 @@ class Hero(pygame.sprite.Sprite):
         self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height))\
                           for el in anim_stay]
         self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
+        self.masks_stay = [pygame.mask.from_surface(im) for im in self.anim_stay]
+        self.masks_stay_l = [pygame.mask.from_surface(im) for im in self.anim_stay_l]
 
         self.anim_fight = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))\
                            for el in anim_fight]
         self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
+        self.masks_fight = [pygame.mask.from_surface(im) for im in self.anim_fight]
+        self.masks_fight_l = [pygame.mask.from_surface(im) for im in self.anim_fight_l]
 
         self.anim_run = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))\
                          for el in anim_run]
         self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
+        self.masks_run = [pygame.mask.from_surface(im) for im in self.anim_run]
+        self.masks_run_l = [pygame.mask.from_surface(im) for im in self.anim_run_l]
 
         self.anim_jump = [pygame.transform.scale(el, (0.22 * user_screen_width, 0.28 * user_screen_height))
                           for el in anim_jump]
         self.anim_jump_l = [pygame.transform.flip(el, True, False) for el in self.anim_jump]
+        self.masks_jump = [pygame.mask.from_surface(im) for im in self.anim_jump]
+        self.masks_jump_l = [pygame.mask.from_surface(im) for im in self.anim_jump_l]
+
+        # маска меча для вычисления попаданию по противнику оружием при атаке
+        self.masks_for_attack = [pygame.mask.from_surface(im.subsurface(
+            pygame.Rect(im.get_width() / 2, im.get_height() / 4, im.get_width() / 2, im.get_height() / 2)))
+            for im in self.anim_fight]
+
+        self.is_enemy_hit = False  # флаг для того, чтобы нельзя было одним ударом нанести урон несколько раз
 
         self.cur_frame_stay = 0
         self.cur_frame_fight = 0
@@ -52,6 +71,7 @@ class Hero(pygame.sprite.Sprite):
             self.right = True
 
         self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
+        self.mask = self.masks_stay[self.cur_frame_stay] if self.right else self.masks_stay_l[self.cur_frame_stay]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
         self.ground = ground
@@ -63,14 +83,19 @@ class Hero(pygame.sprite.Sprite):
         self.jump_power = jump_power
 
         self.jump_speed = 0
-
-        self.clock = pygame.time.Clock()
-        self.time_jump = 0
+        self.jump_enable = True
 
         self.fight_cool_down = fight_cool_down
         self.last_fight_time = 0
 
-        self.jump_enable = True
+    def set_enemy(self, enemy, health_dict):
+        '''
+        Назначить врага персонажа
+        :param enemy: враг, объект pygame.Sprite
+        :return:
+        '''
+        self.enemy = enemy
+        self.health_dict = health_dict
 
     def frame_swap(self):
         '''
@@ -91,21 +116,29 @@ class Hero(pygame.sprite.Sprite):
 
     def image_swap(self):
         '''
-        Метод присваивает спрайту картинку в зависимости от счетччика анимаций и флагов состояния персонажа
+        Метод присваивает спрайту картинку и маску в зависимости от счетччика анимаций и флагов состояния персонажа
         :return:
         '''
         if self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]
+            self.mask = self.masks_fight[self.cur_frame_fight] if self.right\
+                else self.masks_fight_l[self.cur_frame_fight]
         elif self.is_jump:
             self.image = self.anim_jump[self.cur_frame_jump] if self.right\
                 else self.anim_jump_l[self.cur_frame_jump]
+            self.mask = self.masks_jump[self.cur_frame_jump] if self.right \
+                else self.masks_jump_l[self.cur_frame_jump]
         elif self.is_squat:
             pass
         elif self.is_run:
             self.image = self.anim_run[self.cur_frame_run] if self.right else self.anim_run_l[self.cur_frame_run]
+            self.mask = self.masks_run[self.cur_frame_run] if self.right \
+                else self.masks_run_l[self.cur_frame_run]
         else:
             self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
+            self.mask = self.masks_stay[self.cur_frame_stay] if self.right \
+                else self.masks_stay_l[self.cur_frame_stay]
 
     def process_events(self, flags):
         '''
@@ -146,9 +179,10 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self):
         '''
-        Метод для передвижения персонажа в зависимости от флагов состояния
+        Метод для передвижения персонажа в зависимости от флагов состояния а так же для обработки ударов
         :return:
         '''
+        global screen
         if self.is_run:
             if self.left:
                 if self.rect.x - self.speed > 0:
@@ -176,6 +210,15 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_enable = True
                 self.is_jump = False
                 self.cur_frame_jump = 0
+        if self.is_fight:
+            last_mask = self.mask
+            self.mask = self.masks_for_attack[self.cur_frame_fight]
+            if not self.is_enemy_hit and pygame.sprite.collide_mask(self, self.enemy):
+                self.is_enemy_hit = True
+                self.health_dict[self.enemy] -= self.power
+            self.mask = last_mask
+        else:
+            self.is_enemy_hit = False
 
     def update(self):
         '''
