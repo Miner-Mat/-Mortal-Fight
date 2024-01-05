@@ -33,13 +33,13 @@ ground = int(0.94 * user_screen_height)
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 speed = 0.015 * user_screen_height
-power = 10
+power = 5
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 speed2 = 0.015 * user_screen_height
-power2 = 10
+power2 = 5
 jump_power2 = 20
 
 clock = pygame.time.Clock()
@@ -87,20 +87,12 @@ left_strelka_rect = left_strelka.get_rect(topleft=(0.05 * user_screen_width, 0.6
 right_strelka = pygame.transform.scale(pygame.image.load("right_strelka.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
 right_strelka_rect = right_strelka.get_rect(topleft=(0.44 * user_screen_width, 0.67 * user_screen_height))
 
-health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
+health = Healthbars()  # Объявляем класс хэлфбаров
 
 heroes = pygame.sprite.Group()
 
-gr1 = pygame.sprite.Group()
-gr2 = pygame.sprite.Group()
-
 hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
 hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
-
-health_dict = {hero1: current_health_1, hero2: current_health_2}
-
-hero1.set_enemy(hero2, health_dict)
-hero2.set_enemy(hero1, health_dict)
 
 
 def key_check():  # Проверка нажатий
@@ -135,7 +127,7 @@ def key_check():  # Проверка нажатий
     if keys[pygame.K_k]:
         res2.append(SQUAT)
     if keys[pygame.K_h]:
-        res2.append(FIGHT)
+        res2.append(FIGHT_WINDOW)
 
     hero1.process_events(res1)
     hero2.process_events(res2)
@@ -151,11 +143,9 @@ pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 flag = MENU_WINDOW
 running = True  # флаг работы
 
-health.health_on_all_arenas(arens)  # рисует хелф бары на всех аренах для отображения в меню
-
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-
+    health.health_to_all(user_screen_width, user_screen_height, arens, current_health_1, current_health_2)
     arena = pygame.transform.scale(arens[arenas_count], (600, 400))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
@@ -171,8 +161,8 @@ while running:
         screen.blit(right_strelka, (0.43 * user_screen_width, 0.67 * user_screen_height))
 
     elif flag == FIGHT_WINDOW:
+        health.health_bar(user_screen_width, user_screen_height, arens, arenas_count, current_health_1, current_health_2)
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
-        health.draw(screen, health_dict[hero1], health_dict[hero2])
         pygame.draw.rect(screen, (170, 0, 0), back_button)
         screen.blit(back_image, back_image_rect)
 
