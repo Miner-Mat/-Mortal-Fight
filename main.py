@@ -1,4 +1,6 @@
 import pygame  # импортируем pygame
+import os
+from moviepy.editor import VideoFileClip
 from healthbars import Healthbars  # Импортируем класс Healthbars
 from constants_for_hero import *
 
@@ -14,15 +16,16 @@ user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
 
+# Загрузка видеофайла для заставки
+video_clip = VideoFileClip("заставка.mp4")
+video_length = video_clip.duration  # продолжительность видео в секундах
+
 screen = pygame.display.set_mode((user_screen_width, user_screen_height))  # Задаём разрешение основного окна
 pygame.display.set_caption("Mortal Fight")  # Задаём название программе
 icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
 
 pygame.mixer.init()  # инициализируем функцию добавления музыки
-pygame.mixer.music.load("music.mp3")  # Загружаем музыку
-pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
-pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
 # константы для отслеживания текущего окна
 MENU_WINDOW = 0
@@ -33,13 +36,13 @@ ground = int(0.94 * user_screen_height)
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 speed = 0.015 * user_screen_height
-power = 5
+power = 10
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 speed2 = 0.015 * user_screen_height
-power2 = 5
+power2 = 10
 jump_power2 = 20
 
 clock = pygame.time.Clock()
@@ -87,13 +90,58 @@ left_strelka_rect = left_strelka.get_rect(topleft=(0.05 * user_screen_width, 0.6
 right_strelka = pygame.transform.scale(pygame.image.load("right_strelka.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
 right_strelka_rect = right_strelka.get_rect(topleft=(0.44 * user_screen_width, 0.67 * user_screen_height))
 
-health = Healthbars()  # Объявляем класс хэлфбаров
+# Иконка включенного звука
+sound_on = pygame.transform.scale(pygame.image.load("soundon.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
+sound_on_rect = sound_on.get_rect(topleft=(0.73 * user_screen_width, 0.07 * user_screen_height))
+
+# Иконка выключенного звука
+sound_off = pygame.transform.scale(pygame.image.load("soundoff.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
+sound_off_rect = sound_off.get_rect(topleft=(0.73 * user_screen_width, 0.07 * user_screen_height))
+
+health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
 
 heroes = pygame.sprite.Group()
+
+gr1 = pygame.sprite.Group()
+gr2 = pygame.sprite.Group()
 
 hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
 hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
 
+health_dict = {hero1: current_health_1, hero2: current_health_2}
+
+hero1.set_enemy(hero2, health_dict)
+hero2.set_enemy(hero1, health_dict)
+
+# Функция для воспроизведения видеозаставки
+def play_video(clip):
+    start_time = pygame.time.get_ticks()
+    clip_audio = clip.audio.set_fps(44100)
+    clip.audio.write_audiofile("temp_audio.wav")
+    pygame.mixer.music.load('temp_audio.wav')
+    pygame.mixer.music.play()
+
+    while pygame.mixer.music.get_busy():  # Проверка, идёт ли воспроизведение
+        elapsed = (pygame.time.get_ticks() - start_time) / 1000.0
+        if elapsed > video_length:
+            break
+        frame = clip.get_frame(elapsed)
+        surf = pygame.surfarray.make_surface(frame.swapaxes(0,1))
+        screen.blit(surf, (0, 0))
+        pygame.display.flip()
+        pygame.time.wait(int(1000 / clip.fps))
+
+    pygame.mixer.music.stop()  # Останавливаем музыку
+    pygame.mixer.music.unload()  # Выгружаем трек
+    if os.path.exists('temp_audio.wav'):
+        os.remove('temp_audio.wav')  # Удаляем файл после его использования
+
+# Воспроизведение заставки
+play_video(video_clip)
+
+pygame.mixer.music.load("music.mp3")  # Загружаем музыку
+pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
+pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
 def key_check():  # Проверка нажатий
     '''
@@ -127,7 +175,7 @@ def key_check():  # Проверка нажатий
     if keys[pygame.K_k]:
         res2.append(SQUAT)
     if keys[pygame.K_h]:
-        res2.append(FIGHT_WINDOW)
+        res2.append(FIGHT)
 
     hero1.process_events(res1)
     hero2.process_events(res2)
@@ -143,9 +191,13 @@ pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 flag = MENU_WINDOW
 running = True  # флаг работы
 
+health.health_on_all_arenas(arens)  # рисует хелф бары на всех аренах для отображения в меню
+
+sound_flag = True  # флаг нынешнего состояния звука
+
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-    health.health_to_all(user_screen_width, user_screen_height, arens, current_health_1, current_health_2)
+
     arena = pygame.transform.scale(arens[arenas_count], (600, 400))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
@@ -159,10 +211,14 @@ while running:
         screen.blit(arena_text, (0.2 * user_screen_width, 0.43 * user_screen_height))
         screen.blit(left_strelka, (0.05 * user_screen_width, 0.68 * user_screen_height))
         screen.blit(right_strelka, (0.43 * user_screen_width, 0.67 * user_screen_height))
+        if sound_flag:
+            screen.blit(sound_on, (0.73 * user_screen_width, 0.07 * user_screen_height))
+        else:
+            screen.blit(sound_off, (0.73 * user_screen_width, 0.07 * user_screen_height))
 
     elif flag == FIGHT_WINDOW:
-        health.health_bar(user_screen_width, user_screen_height, arens, arenas_count, current_health_1, current_health_2)
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
+        health.draw(screen, health_dict[hero1], health_dict[hero2])
         pygame.draw.rect(screen, (170, 0, 0), back_button)
         screen.blit(back_image, back_image_rect)
 
@@ -185,9 +241,23 @@ while running:
                 arenas_count += 1
                 if arenas_count >= len(arens):
                     arenas_count = 0
+            elif sound_on_rect.collidepoint(event.pos) or sound_off_rect.collidepoint(event.pos):
+                sound_flag = not sound_flag  # Переключаем звук на противоположное состояние
+                if sound_flag:
+                    pygame.mixer.music.set_volume(0.2)
+                else:
+                    pygame.mixer.music.set_volume(0)
 
             elif back_button.collidepoint(event.pos):
                 flag = MENU_WINDOW
+                x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
+                speed = 0.015 * user_screen_height
+                power = 10
+                jump_power = 20
+                x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
+                speed2 = 0.015 * user_screen_height
+                power2 = 10
+                jump_power2 = 20
 
             elif exit_button.collidepoint(event.pos):
                 running = False
