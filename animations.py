@@ -25,13 +25,9 @@ anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charac
             pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
             pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
 
-# Анимации персонажа во время прыжка
-# anim_jump = [pygame.image.load("Character_jump/Jump_1.png"), pygame.image.load("Character_jump/Jump_2.png"),
-#              pygame.image.load("Character_jump/Jump_3.png"), pygame.image.load("Character_jump/Jump_4.png"),
-#              pygame.image.load("Character_jump/Jump_5.png"), pygame.image.load("Character_jump/Jump_6.png"),
-#              pygame.image.load("Character_jump/Jump_7.png"), pygame.image.load("Character_jump/Jump_8.png"),
-#              pygame.image.load("Character_jump/Jump_9.png")]
-
 anim_jump = [pygame.image.load("Character_jump/Jump_3.png"), pygame.image.load("Character_jump/Jump_4.png"),
              pygame.image.load("Character_jump/Jump_5.png"), pygame.image.load("Character_jump/Jump_6.png"),
              pygame.image.load("Character_jump/Jump_7.png"), pygame.image.load("Character_jump/Jump_8.png")]
+
+anim_squat = [pygame.image.load('Character_squat/Squat_1.png'), pygame.image.load('Character_squat/Squat_2.png'),
+              pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_1.png')]

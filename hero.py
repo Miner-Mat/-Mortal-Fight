@@ -1,5 +1,5 @@
 import pygame
-from animations import anim_fight, anim_stay, anim_run, anim_jump, user_screen_width, user_screen_height
+from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height
 from constants_for_hero import *
 
 
@@ -44,6 +44,12 @@ class Hero(pygame.sprite.Sprite):
         self.anim_jump_l = [pygame.transform.flip(el, True, False) for el in self.anim_jump]
         self.masks_jump = [pygame.mask.from_surface(im) for im in self.anim_jump]
         self.masks_jump_l = [pygame.mask.from_surface(im) for im in self.anim_jump_l]
+
+        self.anim_squat = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))
+                           for el in anim_squat]
+        self.anim_squat_l = [pygame.transform.flip(el, True, False) for el in self.anim_squat]
+        self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
+        self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
 
         # маска меча для вычисления попаданию по противнику оружием при атаке
         self.masks_for_attack = [pygame.mask.from_surface(im.subsurface(
@@ -113,12 +119,20 @@ class Hero(pygame.sprite.Sprite):
             self.cur_frame_jump += 1
             if self.cur_frame_jump == len(self.anim_jump):
                 self.cur_frame_jump = 0
+        if self.is_squat:
+            self.cur_frame_squat += 1
+            if self.cur_frame_squat == len(self.anim_squat):
+                self.cur_frame_squat = 0
+                self.is_squat = False
 
     def image_swap(self):
         '''
         Метод присваивает спрайту картинку и маску в зависимости от счетччика анимаций и флагов состояния персонажа
         :return:
         '''
+        # размеры предыдущей картинки для того, чтобы отцентрировать по ширине и оставить низ на той же высоте у новой
+        last_image_width = self.image.get_width()
+        last_image_height = self.image.get_height()
         if self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]
@@ -130,7 +144,10 @@ class Hero(pygame.sprite.Sprite):
             self.mask = self.masks_jump[self.cur_frame_jump] if self.right \
                 else self.masks_jump_l[self.cur_frame_jump]
         elif self.is_squat:
-            pass
+            self.image = self.anim_squat[self.cur_frame_squat] if self.right \
+                else self.anim_squat_l[self.cur_frame_squat]
+            self.mask = self.masks_squat[self.cur_frame_squat] if self.right \
+                else self.masks_squat_l[self.cur_frame_squat]
         elif self.is_run:
             self.image = self.anim_run[self.cur_frame_run] if self.right else self.anim_run_l[self.cur_frame_run]
             self.mask = self.masks_run[self.cur_frame_run] if self.right \
@@ -139,6 +156,12 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
             self.mask = self.masks_stay[self.cur_frame_stay] if self.right \
                 else self.masks_stay_l[self.cur_frame_stay]
+
+        new_image_width = self.image.get_width()
+        new_image_height = self.image.get_height()
+
+        # выравниваем новый кадр анимации
+        self.rect = self.rect.move((last_image_width - new_image_width) / 2, last_image_height - new_image_height)
 
     def process_events(self, flags):
         '''
@@ -154,11 +177,11 @@ class Hero(pygame.sprite.Sprite):
             self.is_run = False
 
         # далее непрерываемые процессы
-        if JUMP in flags:
+        if JUMP in flags and not self.is_squat:
             self.is_jump = True
 
-        # if SQUAT in flags:
-        #     self.is_squat = True
+        if SQUAT in flags:
+            self.is_squat = True
 
         # проверка возможности атаки
         if current_time - self.last_fight_time >= self.fight_cool_down:
@@ -190,10 +213,10 @@ class Hero(pygame.sprite.Sprite):
                 else:
                     self.rect.x = 0
             else:
-                if self.rect.x + self.rect.width + self.speed < user_screen_width:
+                if self.rect.x + self.image.get_width() + self.speed < user_screen_width:
                     self.rect = self.rect.move(self.speed, 0)
                 else:
-                    self.rect.x = user_screen_width - self.rect.width
+                    self.rect.x = user_screen_width - self.image.get_width()
         if self.is_jump:
             if self.jump_enable:
                 self.jump_speed = -self.jump_power
