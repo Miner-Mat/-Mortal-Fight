@@ -211,12 +211,12 @@ class Hero(pygame.sprite.Sprite):
                 self.is_jump = False
                 self.cur_frame_jump = 0
         if self.is_fight:
-            last_mask = self.mask
-            self.mask = self.masks_for_attack[self.cur_frame_fight]
-            if not self.is_enemy_hit and pygame.sprite.collide_mask(self, self.enemy):
+            if not self.is_enemy_hit and pygame.sprite.collide_mask(self, self.enemy)\
+                    and (self.rect.x <= self.enemy.rect.x if self.right else self.rect.x >= self.enemy.rect.x)\
+                    and (int(self.rect.y + self.rect.height / 2) in
+                         range(int(self.enemy.rect.y), int(self.enemy.rect.y + self.enemy.rect.height))):
                 self.is_enemy_hit = True
                 self.health_dict[self.enemy] -= self.power
-            self.mask = last_mask
         else:
             self.is_enemy_hit = False
 

@@ -113,6 +113,7 @@ health_dict = {hero1: current_health_1, hero2: current_health_2}
 hero1.set_enemy(hero2, health_dict)
 hero2.set_enemy(hero1, health_dict)
 
+
 # Функция для воспроизведения видеозаставки
 def play_video(clip):
     start_time = pygame.time.get_ticks()
@@ -136,12 +137,14 @@ def play_video(clip):
     if os.path.exists('temp_audio.wav'):
         os.remove('temp_audio.wav')  # Удаляем файл после его использования
 
+
 # Воспроизведение заставки
 play_video(video_clip)
 
 pygame.mixer.music.load("music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
+
 
 def key_check():  # Проверка нажатий
     '''
