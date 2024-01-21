@@ -102,9 +102,6 @@ health = Healthbars(user_screen_width, user_screen_height)  # Объявляем
 
 heroes = pygame.sprite.Group()
 
-gr1 = pygame.sprite.Group()
-gr2 = pygame.sprite.Group()
-
 hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
 hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
 
@@ -261,6 +258,16 @@ while running:
                 speed2 = 0.015 * user_screen_height
                 power2 = 10
                 jump_power2 = 20
+
+                heroes = pygame.sprite.Group()
+
+                hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
+                hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
+
+                health_dict = {hero1: current_health_1, hero2: current_health_2}
+
+                hero1.set_enemy(hero2, health_dict)
+                hero2.set_enemy(hero1, health_dict)
 
             elif exit_button.collidepoint(event.pos):
                 running = False
