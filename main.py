@@ -7,23 +7,24 @@ from constants_for_hero import *
 # Инициализация Pygame
 pygame.init()
 
-
-from hero import Hero
-from arens import arens
-
-
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
-
-# Загрузка видеофайла для заставки
-video_clip = VideoFileClip("заставка.mp4")
-video_length = video_clip.duration  # продолжительность видео в секундах
 
 screen = pygame.display.set_mode((user_screen_width, user_screen_height))  # Задаём разрешение основного окна
 pygame.display.set_caption("Mortal Fight")  # Задаём название программе
 icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
+
+
+from hero import Hero
+from arens import arens, arenas_count
+from buttons_and_texts import *
+
+
+# Загрузка видеофайла для заставки
+video_clip = VideoFileClip("заставка.mp4")
+video_length = video_clip.duration  # продолжительность видео в секундах
 
 pygame.mixer.init()  # инициализируем функцию добавления музыки
 
@@ -45,58 +46,9 @@ speed2 = 0.015 * user_screen_height
 power2 = 10
 jump_power2 = 20
 
-clock = pygame.time.Clock()
-
 # Значения хэлф баров
-current_health_1 = 100
-current_health_2 = 100
-
-# Счетчик выбора арен
-arenas_count = 2
-
-# Текст - заголовок игры на входном экране
-game_entery_name = pygame.font.Font("Fonts/unispace bd.ttf", int((0.33 * user_screen_width) // (0.36 * user_screen_width // 100)))
-text_surface = game_entery_name.render("MORTAL FIGHT", True, (255, 107, 107))
-
-# Кнопка начала игры
-play_button = pygame.Rect(0.43 * user_screen_width, 0.2 * user_screen_height, 300, 100)
-play_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int((0.08 * user_screen_width) // (0.12 * user_screen_width // 100)))
-play_text = play_text_font.render("PLAY", True, (255, 107, 107))
-play_text_rect = play_text.get_rect(center=play_button.center)
-
-# Кнопка выхода из игры
-exit_button = pygame.Rect(0.43 * user_screen_width, 0.32 * user_screen_height, 300, 100)
-exit_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int((0.08 * user_screen_width) // (0.12 * user_screen_width // 100)))
-exit_text = exit_text_font.render("EXIT", True, (255, 107, 107))
-exit_text_rect = exit_text.get_rect(center=exit_button.center)
-
-# Кнопка возврата в меню игры
-back_button = pygame.Rect(0.64 * user_screen_width, 0.02 * user_screen_height, 50, 50)
-back_image = pygame.transform.scale(pygame.image.load("krest.png").convert_alpha(), (0.02 * user_screen_width, 0.03 * user_screen_height))
-back_image_rect = back_image.get_rect(center=back_button.center)
-
-# Заголовок окна выбора арены
-arena_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int((0.08 * user_screen_width) // (0.12 * user_screen_width // 100)))
-arena_text = arena_text_font.render("ARENA", True, (255, 107, 107))
-
-# Окно выбора арены
-aren_window = pygame.Rect(0.11 * user_screen_width, 0.53 * user_screen_height, 600, 400)
-arena = pygame.transform.scale(arens[arenas_count], (600, 400))
-arena_rect = arena.get_rect(center=aren_window.center)
-
-# Стрелки выбора арены
-left_strelka = pygame.transform.scale(pygame.image.load("left_strelka.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
-left_strelka_rect = left_strelka.get_rect(topleft=(0.05 * user_screen_width, 0.68 * user_screen_height))
-right_strelka = pygame.transform.scale(pygame.image.load("right_strelka.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
-right_strelka_rect = right_strelka.get_rect(topleft=(0.44 * user_screen_width, 0.67 * user_screen_height))
-
-# Иконка включенного звука
-sound_on = pygame.transform.scale(pygame.image.load("soundon.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
-sound_on_rect = sound_on.get_rect(topleft=(0.73 * user_screen_width, 0.07 * user_screen_height))
-
-# Иконка выключенного звука
-sound_off = pygame.transform.scale(pygame.image.load("soundoff.png"), (0.05 * user_screen_width, 0.05 * user_screen_height))
-sound_off_rect = sound_off.get_rect(topleft=(0.73 * user_screen_width, 0.07 * user_screen_height))
+health_1 = 100
+health_2 = 100
 
 health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
 
@@ -105,7 +57,7 @@ heroes = pygame.sprite.Group()
 hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
 hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
 
-health_dict = {hero1: current_health_1, hero2: current_health_2}
+health_dict = {hero1: health_1, hero2: health_2}
 
 hero1.set_enemy(hero2, health_dict)
 hero2.set_enemy(hero1, health_dict)
@@ -188,12 +140,14 @@ animation_delay = 100
 UPDATE_FRAMES = pygame.USEREVENT + 1  # создаём событие для обновления кадров и присваиваем ему номер
 pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 
-flag = MENU_WINDOW
-running = True  # флаг работы
-
 health.health_on_all_arenas(arens)  # рисует хелф бары на всех аренах для отображения в меню
 
+flag = MENU_WINDOW
+
+running = True  # флаг работы
 sound_flag = True  # флаг нынешнего состояния звука
+
+clock = pygame.time.Clock()
 
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
@@ -225,6 +179,9 @@ while running:
         key_check()  # вызываем проверку нажатий
 
         heroes.draw(screen)
+
+        if health_dict[hero1] <= 0 or health_dict[hero2] <= 0:
+            pass
 
     pygame.display.update()  # обновляем окно
 
@@ -264,7 +221,7 @@ while running:
                 hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
                 hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
 
-                health_dict = {hero1: current_health_1, hero2: current_health_2}
+                health_dict = {hero1: health_1, hero2: health_2}
 
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
