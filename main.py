@@ -88,7 +88,7 @@ def play_video(clip):
 
 
 # Воспроизведение заставки
-play_video(video_clip)
+# play_video(video_clip)
 
 pygame.mixer.music.load("music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
@@ -152,23 +152,23 @@ clock = pygame.time.Clock()
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
-    arena = pygame.transform.scale(arens[arenas_count], (600, 400))
+    arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
-        screen.blit(text_surface, (0.31 * user_screen_width, 0.04 * user_screen_height))
+        screen.blit(text_surface, ((user_screen_width - text_surface.get_width()) / 2, 0.04 * user_screen_height))
         pygame.draw.rect(screen, (170, 0, 0), play_button)
         screen.blit(play_text, play_text_rect)
         pygame.draw.rect(screen, (170, 0, 0), exit_button)
         screen.blit(exit_text, exit_text_rect)
         pygame.draw.rect(screen, (170, 0, 0), aren_window)
         screen.blit(arena, arena_rect)
-        screen.blit(arena_text, (0.2 * user_screen_width, 0.43 * user_screen_height))
-        screen.blit(left_strelka, (0.05 * user_screen_width, 0.68 * user_screen_height))
-        screen.blit(right_strelka, (0.43 * user_screen_width, 0.67 * user_screen_height))
+        screen.blit(arena_text, (0.2 * user_screen_width, 0.46 * user_screen_height))
+        screen.blit(left_strelka, left_strelka_rect)
+        screen.blit(right_strelka, right_strelka_rect)
         if sound_flag:
-            screen.blit(sound_on, (0.73 * user_screen_width, 0.07 * user_screen_height))
+            screen.blit(sound_on, sound_on_rect)
         else:
-            screen.blit(sound_off, (0.73 * user_screen_width, 0.07 * user_screen_height))
+            screen.blit(sound_off, sound_off_rect)
 
     elif flag == FIGHT_WINDOW:
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
