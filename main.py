@@ -25,7 +25,7 @@ from buttons_and_texts import *
 # Загрузка видеофайла для заставки
 video_clip = VideoFileClip("заставка.mp4")
 # меняем размер в зависимости от экрана
-video_clip = video_clip.resize(height=user_screen_height, width=user_screen_width)
+#video_clip = video_clip.resize(height=user_screen_height, width=user_screen_width)
 video_length = video_clip.duration  # продолжительность видео в секундах
 
 pygame.mixer.init()  # инициализируем функцию добавления музыки
