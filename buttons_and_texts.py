@@ -8,14 +8,14 @@ user_screen_height = user_screen_info.current_h
 
 # Текст - заголовок игры на входном экране
 game_entery_name = pygame.font.Font("Fonts/unispace bd.ttf",
-                                    int(user_screen_width * 0.08 * user_screen_width * 0.08 / 100))
+                                    int(user_screen_height * 0.16))
 text_surface = game_entery_name.render("MORTAL FIGHT", True, (255, 107, 107))
 
 # Кнопка начала игры
 play_button = pygame.Rect(0.78 * user_screen_width / 2, 0.21 * user_screen_height,
                           0.22 * user_screen_width, 0.12 * user_screen_height)
 play_text_font = pygame.font.Font("Fonts/unispace bd.ttf",
-                                  int(user_screen_width * 0.07 * user_screen_width * 0.07 / 100))
+                                  int(user_screen_height * 0.12))
 play_text = play_text_font.render("PLAY", True, (255, 107, 107))
 play_text_rect = play_text.get_rect(center=play_button.center)
 
@@ -23,7 +23,7 @@ play_text_rect = play_text.get_rect(center=play_button.center)
 exit_button = pygame.Rect(0.78 * user_screen_width / 2, 0.35 * user_screen_height,
                           0.22 * user_screen_width, 0.12 * user_screen_height)
 exit_text_font = pygame.font.Font("Fonts/unispace bd.ttf",
-                                  int(user_screen_width * 0.07 * user_screen_width * 0.07 / 100))
+                                  int(user_screen_height * 0.12))
 exit_text = exit_text_font.render("EXIT", True, (255, 107, 107))
 exit_text_rect = exit_text.get_rect(center=exit_button.center)
 
@@ -36,7 +36,7 @@ back_image_rect = back_image.get_rect(center=back_button.center)
 
 # Заголовок окна выбора арены
 arena_text_font = pygame.font.Font("Fonts/unispace bd.ttf",
-                                   int(user_screen_width * 0.07 * user_screen_width * 0.07 / 100))
+                                   int(user_screen_height * 0.12))
 arena_text = arena_text_font.render("ARENA", True, (255, 107, 107))
 
 # Окно выбора арены
