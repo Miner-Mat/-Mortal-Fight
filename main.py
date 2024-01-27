@@ -154,6 +154,7 @@ while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
     arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
+    character_choice = pygame.transform.scale(characters[characters_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, ((user_screen_width - text_surface.get_width()) / 2, 0.04 * user_screen_height))
