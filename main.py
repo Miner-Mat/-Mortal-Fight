@@ -38,18 +38,20 @@ ground = int(0.94 * user_screen_height)
 # Определяющие положение персонажа переменные
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 speed = 0.015 * user_screen_height
-power = 10
+power = 30
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 speed2 = 0.015 * user_screen_height
-power2 = 10
+power2 = 30
 jump_power2 = 20
 
 # Значения хэлф баров
 health_1 = 100
 health_2 = 100
+
+ch_win_flag = False  # Флаг, означсающий что один из игроков победил
 
 health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
 
@@ -104,37 +106,38 @@ def key_check():  # Проверка нажатий
     keys = pygame.key.get_pressed()
     res1 = []  # списки с флагами, которые передадим в классы персонажей
     res2 = []
-    if keys[pygame.K_a]:
-        res1.append(LEFT)
-        res1.append(RUN)
-    if keys[pygame.K_d]:
-        res1.append(RIGHT)
-        res1.append(RUN)
-    if keys[pygame.K_w]:
-        res1.append(JUMP)
-    if keys[pygame.K_s]:
-        res1.append(SQUAT)
-    if keys[pygame.K_f]:
-        res1.append(FIGHT)
+    if not ch_win_flag:
+        if keys[pygame.K_a]:
+            res1.append(LEFT)
+            res1.append(RUN)
+        if keys[pygame.K_d]:
+            res1.append(RIGHT)
+            res1.append(RUN)
+        if keys[pygame.K_w]:
+            res1.append(JUMP)
+        if keys[pygame.K_s]:
+            res1.append(SQUAT)
+        if keys[pygame.K_f]:
+            res1.append(FIGHT)
 
-    if keys[pygame.K_j]:
-        res2.append(LEFT)
-        res2.append(RUN)
-    if keys[pygame.K_l]:
-        res2.append(RIGHT)
-        res2.append(RUN)
-    if keys[pygame.K_i]:
-        res2.append(JUMP)
-    if keys[pygame.K_k]:
-        res2.append(SQUAT)
-    if keys[pygame.K_h]:
-        res2.append(FIGHT)
+        if keys[pygame.K_j]:
+            res2.append(LEFT)
+            res2.append(RUN)
+        if keys[pygame.K_l]:
+            res2.append(RIGHT)
+            res2.append(RUN)
+        if keys[pygame.K_i]:
+            res2.append(JUMP)
+        if keys[pygame.K_k]:
+            res2.append(SQUAT)
+        if keys[pygame.K_h]:
+            res2.append(FIGHT)
 
-    hero1.process_events(res1)
-    hero2.process_events(res2)
+        hero1.process_events(res1)
+        hero2.process_events(res2)
 
-    hero1.move()
-    hero2.move()
+        hero1.move()
+        hero2.move()
 
 
 animation_delay = 100
@@ -154,7 +157,7 @@ while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
     arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
-    character_choice = pygame.transform.scale(characters[characters_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
+    character_choice = pygame.transform.scale(characters[characters_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, ((user_screen_width - text_surface.get_width()) / 2, 0.04 * user_screen_height))
@@ -185,8 +188,16 @@ while running:
 
         heroes.draw(screen)
 
-        if health_dict[hero1] <= 0 or health_dict[hero2] <= 0:
-            pass
+        if health_dict[hero1] <= 0:
+            screen.blit(ch2_win_text, (0.25 * user_screen_width, 0.46 * user_screen_height))
+            ch_win_flag = True
+            pygame.draw.rect(screen, (170, 0, 0), restart_button)
+            screen.blit(restart_image, restart_image_rect)
+        elif health_dict[hero2] <= 0:
+            screen.blit(ch1_win_text, (0.25 * user_screen_width, 0.46 * user_screen_height))
+            ch_win_flag = True
+            pygame.draw.rect(screen, (170, 0, 0), restart_button)
+            screen.blit(restart_image, restart_image_rect)
 
     pygame.display.update()  # обновляем окно
 
@@ -217,16 +228,38 @@ while running:
                     pygame.mixer.music.set_volume(0.2)
                 else:
                     pygame.mixer.music.set_volume(0)
-
-            elif back_button.collidepoint(event.pos):
-                flag = MENU_WINDOW
+            elif restart_button.collidepoint(event.pos):
+                flag = FIGHT_WINDOW
+                ch_win_flag = False
                 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
                 speed = 0.015 * user_screen_height
-                power = 10
+                power = 30
                 jump_power = 20
                 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
                 speed2 = 0.015 * user_screen_height
-                power2 = 10
+                power2 = 30
+                jump_power2 = 20
+
+                heroes = pygame.sprite.Group()
+
+                hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
+                hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
+
+                health_dict = {hero1: health_1, hero2: health_2}
+
+                hero1.set_enemy(hero2, health_dict)
+                hero2.set_enemy(hero1, health_dict)
+            elif back_button.collidepoint(event.pos):
+                flag = MENU_WINDOW
+                ch_win_flag = False
+
+                x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
+                speed = 0.015 * user_screen_height
+                power = 30
+                jump_power = 20
+                x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
+                speed2 = 0.015 * user_screen_height
+                power2 = 30
                 jump_power2 = 20
 
                 heroes = pygame.sprite.Group()
