@@ -1,18 +1,21 @@
 import pygame
-from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height, Vurdalak_stay
+from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height,\
+    Vurdalak_stay
 from constants_for_hero import *
+
 
 class Hero(pygame.sprite.Sprite):
     '''
     Класс персонаж
     '''
-    def __init__(self, x, y, ground, speed, power, jump_power, fight_cool_down, *groups, direction=RIGHT):
+    def __init__(self, x, y, ground, speed, power, throw_back_power, jump_power, fight_cool_down, *groups, direction=RIGHT):
         '''
         :param x: координата х левого верхнего угла
         :param y: координата у левого верхнего угла
         :param ground: у координата земли
         :param speed: скорость персонажа за одну итерацию
         :param power: сила удара
+        :param throw_back_power: сила откидывания противника
         :param jump_power: начальная скорость прыжка в пикселях
         :param fight_cool_down: время в миллисекундах, которое игрок не сможет атаковать после использования атаки
         :param enemy_group: группа спрайтов противников
@@ -56,6 +59,8 @@ class Hero(pygame.sprite.Sprite):
             for im in self.anim_fight]
 
         self.is_enemy_hit = False  # флаг для того, чтобы нельзя было одним ударом нанести урон несколько раз
+        self.hiten = 0  # флаг был ли ударен персонаж для кратковременной смены цвета.
+        # Численно равен количеству перекрашенных кадров анимации
 
         self.cur_frame_stay = 0
         self.cur_frame_fight = 0
@@ -86,6 +91,7 @@ class Hero(pygame.sprite.Sprite):
         self.speed = speed
         self.power = power
         self.jump_power = jump_power
+        self.throw_back_power = throw_back_power
 
         self.jump_speed = 0
         self.jump_enable = True
@@ -101,6 +107,22 @@ class Hero(pygame.sprite.Sprite):
         '''
         self.enemy = enemy
         self.health_dict = health_dict
+
+    def hit(self, n_frames):
+        '''
+        Назначить количество кадров анимации, которое персонаж будет перекрашен
+        :param n_frames: количество кадров
+        :return:
+        '''
+        self.hiten = n_frames
+
+    def move_back(self, n_pix):
+        '''
+        Метод откидывает персонажа
+        :param n_pix: количество пикселей по х
+        :return:
+        '''
+        self.rect = self.rect.move(n_pix, 0)
 
     def frame_swap(self):
         '''
@@ -123,6 +145,11 @@ class Hero(pygame.sprite.Sprite):
             if self.cur_frame_squat == len(self.anim_squat):
                 self.cur_frame_squat = 0
                 self.is_squat = False
+
+        if self.hiten:
+            self.image = self.image.copy()
+            self.image.set_alpha(200)
+            self.hiten -= 1
 
     def image_swap(self):
         '''
@@ -238,6 +265,8 @@ class Hero(pygame.sprite.Sprite):
                     and (int(self.rect.y + self.rect.height / 2) in
                          range(int(self.enemy.rect.y), int(self.enemy.rect.y + self.enemy.rect.height))):
                 self.is_enemy_hit = True
+                self.enemy.hit(5)
+                self.enemy.move_back(self.throw_back_power if self.right else -self.throw_back_power)
                 pygame.mixer.init()
                 sound_2 = pygame.mixer.Sound("slap.mp3")
                 sound_2.play()

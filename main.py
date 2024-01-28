@@ -39,12 +39,14 @@ ground = int(0.94 * user_screen_height)
 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
 speed = 0.015 * user_screen_height
 power = 30
+throw_back_power = 40
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
 speed2 = 0.015 * user_screen_height
 power2 = 30
+throw_back_power2 = 40
 jump_power2 = 20
 
 # Значения хэлф баров
@@ -57,8 +59,8 @@ health = Healthbars(user_screen_width, user_screen_height)  # Объявляем
 
 heroes = pygame.sprite.Group()
 
-hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
-hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
+hero1 = Hero(x, y, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
+hero2 = Hero(x2, y2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT)
 
 health_dict = {hero1: health_1, hero2: health_2}
 
@@ -99,6 +101,7 @@ pygame.mixer.music.play(-1)  # Запускаем бесконечный цик�
 
 sound = pygame.mixer.Sound("turn.mp3")
 sound_2 = pygame.mixer.Sound("slap.mp3")
+
 
 def key_check():  # Проверка нажатий
     '''
