@@ -97,6 +97,7 @@ pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
+sound = pygame.mixer.Sound("turn.mp3")
 
 def key_check():  # Проверка нажатий
     '''
@@ -155,7 +156,6 @@ clock = pygame.time.Clock()
 
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-
     arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
     character_choice = pygame.transform.scale(characters[character1_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
     character2_choice = pygame.transform.scale(characters[character2_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
@@ -213,6 +213,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
+                sound.play()
                 flag = FIGHT_WINDOW
                 pygame.mixer.music.load("music.mp3")  # Загружаем музыку
                 if sound_flag:
@@ -221,36 +222,44 @@ while running:
                     pygame.mixer.music.set_volume(0)
                 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
             elif left_strelka_rect.collidepoint(event.pos):
+                sound.play()
                 arenas_count -= 1
                 if arenas_count < 0:
                     arenas_count = len(arens) - 1
             elif right_strelka_rect.collidepoint(event.pos):
+                sound.play()
                 arenas_count += 1
                 if arenas_count >= len(arens):
                     arenas_count = 0
             elif left_strelka_ch1_rect.collidepoint(event.pos):
+                sound.play()
                 character1_count -= 1
                 if character1_count < 0:
                     character1_count = len(characters) - 1
             elif right_strelka_ch1_rect.collidepoint(event.pos):
+                sound.play()
                 character1_count += 1
                 if character1_count >= len(characters):
                     character1_count = 0
             elif left_strelka_ch2_rect.collidepoint(event.pos):
+                sound.play()
                 character2_count -= 1
                 if character2_count < 0:
                     character2_count = len(characters) - 1
             elif right_strelka_ch2_rect.collidepoint(event.pos):
+                sound.play()
                 character2_count += 1
                 if character2_count >= len(characters):
                     character2_count = 0
             elif sound_on_rect.collidepoint(event.pos) or sound_off_rect.collidepoint(event.pos):
+                sound.play()
                 sound_flag = not sound_flag  # Переключаем звук на противоположное состояние
                 if sound_flag:
                     pygame.mixer.music.set_volume(0.2)
                 else:
                     pygame.mixer.music.set_volume(0)
             elif restart_button.collidepoint(event.pos):
+                sound.play()
                 flag = FIGHT_WINDOW
                 ch_win_flag = False
                 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
@@ -273,6 +282,7 @@ while running:
                 hero2.set_enemy(hero1, health_dict)
 
             elif back_button.collidepoint(event.pos):
+                sound.play()
                 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
                 if sound_flag:
                     pygame.mixer.music.set_volume(0.2)
