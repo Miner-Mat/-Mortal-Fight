@@ -183,6 +183,8 @@ while running:
         health.draw(screen, health_dict[hero1], health_dict[hero2])
         pygame.draw.rect(screen, (170, 0, 0), back_button)
         screen.blit(back_image, back_image_rect)
+        screen.blit(ch1_text, (0.02 * user_screen_width, 0.05 * user_screen_height))
+        screen.blit(ch2_text, (0.8 * user_screen_width, 0.05 * user_screen_height))
 
         key_check()  # вызываем проверку нажатий
 
@@ -249,6 +251,7 @@ while running:
 
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
+
             elif back_button.collidepoint(event.pos):
                 flag = MENU_WINDOW
                 ch_win_flag = False

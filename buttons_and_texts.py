@@ -89,3 +89,9 @@ restart_button = pygame.Rect(0.96 * user_screen_width / 2, 0.62 * user_screen_he
 restart_image = pygame.transform.scale(pygame.image.load("restart.png").convert_alpha(),
                                        (0.07 * user_screen_width, 0.14 * user_screen_height))
 restart_image_rect = restart_image.get_rect(center=restart_button.center)
+
+# Надписи обозначающие игроков под хэлфбарами
+ch1_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
+ch1_text = ch1_font.render("PLAYER 1", True, (255, 107, 107))
+ch2_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
+ch2_text = ch1_font.render("PLAYER 2", True, (255, 107, 107))
