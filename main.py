@@ -98,6 +98,7 @@ pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
 sound = pygame.mixer.Sound("turn.mp3")
+sound_2 = pygame.mixer.Sound("slap.mp3")
 
 def key_check():  # Проверка нажатий
     '''

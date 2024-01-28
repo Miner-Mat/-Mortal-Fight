@@ -2,7 +2,6 @@ import pygame
 from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height, Vurdalak_stay
 from constants_for_hero import *
 
-
 class Hero(pygame.sprite.Sprite):
     '''
     Класс персонаж
@@ -239,6 +238,9 @@ class Hero(pygame.sprite.Sprite):
                     and (int(self.rect.y + self.rect.height / 2) in
                          range(int(self.enemy.rect.y), int(self.enemy.rect.y + self.enemy.rect.height))):
                 self.is_enemy_hit = True
+                pygame.mixer.init()
+                sound_2 = pygame.mixer.Sound("slap.mp3")
+                sound_2.play()
                 self.health_dict[self.enemy] -= self.power
         else:
             self.is_enemy_hit = False
