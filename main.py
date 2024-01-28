@@ -93,7 +93,7 @@ def play_video(clip):
 # Воспроизведение заставки
 play_video(video_clip)
 
-pygame.mixer.music.load("music.mp3")  # Загружаем музыку
+pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
@@ -214,6 +214,12 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
                 flag = FIGHT_WINDOW
+                pygame.mixer.music.load("music.mp3")  # Загружаем музыку
+                if sound_flag:
+                    pygame.mixer.music.set_volume(0.2)
+                else:
+                    pygame.mixer.music.set_volume(0)
+                pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
             elif left_strelka_rect.collidepoint(event.pos):
                 arenas_count -= 1
                 if arenas_count < 0:
@@ -267,6 +273,12 @@ while running:
                 hero2.set_enemy(hero1, health_dict)
 
             elif back_button.collidepoint(event.pos):
+                pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
+                if sound_flag:
+                    pygame.mixer.music.set_volume(0.2)
+                else:
+                    pygame.mixer.music.set_volume(0)
+                pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
                 flag = MENU_WINDOW
                 ch_win_flag = False
 
