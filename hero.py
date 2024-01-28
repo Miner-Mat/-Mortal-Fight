@@ -1,5 +1,5 @@
 import pygame
-from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height
+from animations import anim_fight, anim_stay, anim_run, anim_jump, anim_squat, user_screen_width, user_screen_height, Vurdalak_stay
 from constants_for_hero import *
 
 

@@ -1,6 +1,6 @@
 import pygame
 from arens import arens, arenas_count
-from characters import characters, characters_count
+from characters import characters, character1_count, character2_count
 
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
@@ -66,7 +66,7 @@ sound_off_rect = sound_off.get_rect(topleft=(0.86 * user_screen_width, 0.09 * us
 # Окно выбора первого персонажа
 character_choice_window = pygame.Rect(0.75 * user_screen_width / 1.3, 0.6 * user_screen_height,
                                       0.1 * user_screen_width, 0.3 * user_screen_height)
-character_choice = pygame.transform.scale(characters[characters_count], character_choice_window.size)
+character_choice = pygame.transform.scale(characters[character1_count], character_choice_window.size)
 character_choice_rect = character_choice.get_rect(center=character_choice_window.center)
 
 # Стрелки для выбора первого персонажа
@@ -76,6 +76,20 @@ left_strelka_ch1_rect = left_strelka_ch1.get_rect(topleft=(0.55 * user_screen_wi
 right_strelka_ch1 = pygame.transform.scale(pygame.image.load("right_strelka.png"),
                                            (0.02 * user_screen_width, 0.07 * user_screen_height))
 right_strelka_ch1_rect = right_strelka_ch1.get_rect(topleft=(0.68 * user_screen_width, 0.69 * user_screen_height))
+
+# Окно выбора второго персонажа
+character2_choice_window = pygame.Rect(0.77 * user_screen_width, 0.6 * user_screen_height,
+                                      0.1 * user_screen_width, 0.3 * user_screen_height)
+character2_choice = pygame.transform.scale(characters[character2_count], character2_choice_window.size)
+character2_choice_rect = character2_choice.get_rect(center=character2_choice_window.center)
+
+# Стрелки для выбора вторго персонажа
+left_strelka_ch2 = pygame.transform.scale(pygame.image.load("left_strelka.png"),
+                                          (0.02 * user_screen_width, 0.07 * user_screen_height))
+left_strelka_ch2_rect = left_strelka_ch2.get_rect(topleft=(0.75 * user_screen_width, 0.69 * user_screen_height))
+right_strelka_ch2 = pygame.transform.scale(pygame.image.load("right_strelka.png"),
+                                           (0.02 * user_screen_width, 0.07 * user_screen_height))
+right_strelka_ch2_rect = right_strelka_ch2.get_rect(topleft=(0.87 * user_screen_width, 0.69 * user_screen_height))
 
 # Сообщения о выйгрыше игроков
 ch1_win_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.12))
@@ -95,3 +109,11 @@ ch1_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.
 ch1_text = ch1_font.render("PLAYER 1", True, (255, 107, 107))
 ch2_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
 ch2_text = ch1_font.render("PLAYER 2", True, (255, 107, 107))
+
+# Первый персонаж выбор
+ch1_choice_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
+ch1_choice_text = ch1_choice_text_font.render("P1", True, (255, 107, 107))
+
+# Второй персонаж выбор
+ch2_choice_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
+ch2_choice_text = ch2_choice_text_font.render("P2", True, (255, 107, 107))

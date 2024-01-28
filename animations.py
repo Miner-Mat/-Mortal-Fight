@@ -5,7 +5,7 @@ user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
 
-# Анимации персонажа в момент неподвижности вправо
+# Анимации деда Максима в момент неподвижности вправо
 anim_stay = [pygame.image.load("Character_st/1st.png"),
            pygame.image.load("Character_st/2st.png"),
            pygame.image.load("Character_st/3st.png"),
@@ -14,20 +14,36 @@ anim_stay = [pygame.image.load("Character_st/1st.png"),
            pygame.image.load("Character_st/6st.png"),
            pygame.image.load("Character_st/7st.png")]
 
-# Анимации персонажа во время атаки
+# Анимации деда Максима во время атаки
 anim_fight = [pygame.image.load("Character_fight/Attack_1.png"), pygame.image.load("Character_fight/Attack_2.png"),
               pygame.image.load("Character_fight/Attack_3.png"), pygame.image.load("Character_fight/Attack_4.png"),
               pygame.image.load("Character_fight/Attack_5.png")]
 
-# Анимации персонажа во время бега
+# Анимации деда Максима во время бега
 anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charact_run/run2.png"),
             pygame.image.load("charact_run/run3.png"), pygame.image.load("charact_run/run4.png"),
             pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
             pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
 
+# Анимации деда Максима во время прыжка
 anim_jump = [pygame.image.load("Character_jump/Jump_3.png"), pygame.image.load("Character_jump/Jump_4.png"),
              pygame.image.load("Character_jump/Jump_5.png"), pygame.image.load("Character_jump/Jump_6.png"),
              pygame.image.load("Character_jump/Jump_7.png"), pygame.image.load("Character_jump/Jump_8.png")]
 
+# Анимации деда Максима во время приседа
 anim_squat = [pygame.image.load('Character_squat/Squat_1.png'), pygame.image.load('Character_squat/Squat_2.png'),
               pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_1.png')]
+
+# Анимации Вурдалака во время неподвижности вправо
+Vurdalak_stay = [pygame.image.load("Vurdalak_st/St_1.png"),
+                 pygame.image.load("Vurdalak_st/St_2.png"),
+                 pygame.image.load("Vurdalak_st/St_3.png"),
+                 pygame.image.load("Vurdalak_st/St_4.png"),
+                 pygame.image.load("Vurdalak_st/St_5.png"),
+                 pygame.image.load("Vurdalak_st/St_6.png"),
+                 pygame.image.load("Vurdalak_st/St_7.png"),
+                 pygame.image.load("Vurdalak_st/St_8.png"),
+                 pygame.image.load("Vurdalak_st/St_9.png"),
+                 pygame.image.load("Vurdalak_st/St_10.png"),
+                 pygame.image.load("Vurdalak_st/St_11.png"),
+                 pygame.image.load("Vurdalak_st/St_12.png")]

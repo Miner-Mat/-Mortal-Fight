@@ -157,7 +157,8 @@ while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
     arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
-    character_choice = pygame.transform.scale(characters[characters_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
+    character_choice = pygame.transform.scale(characters[character1_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
+    character2_choice = pygame.transform.scale(characters[character2_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
     if flag == MENU_WINDOW:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, ((user_screen_width - text_surface.get_width()) / 2, 0.04 * user_screen_height))
@@ -173,6 +174,11 @@ while running:
         screen.blit(character_choice, character_choice_rect)
         screen.blit(left_strelka_ch1, left_strelka_ch1_rect)
         screen.blit(right_strelka_ch1, right_strelka_ch1_rect)
+        screen.blit(character2_choice, character2_choice_rect)
+        screen.blit(left_strelka_ch2, left_strelka_ch2_rect)
+        screen.blit(right_strelka_ch2, right_strelka_ch2_rect)
+        screen.blit(ch1_choice_text, (0.6 * user_screen_width, 0.54 * user_screen_height))
+        screen.blit(ch2_choice_text, (0.8 * user_screen_width, 0.54 * user_screen_height))
         if sound_flag:
             screen.blit(sound_on, sound_on_rect)
         else:
@@ -217,13 +223,21 @@ while running:
                 if arenas_count >= len(arens):
                     arenas_count = 0
             elif left_strelka_ch1_rect.collidepoint(event.pos):
-                characters_count -= 1
-                if characters_count < 0:
-                    characters_count = len(characters) - 1
+                character1_count -= 1
+                if character1_count < 0:
+                    character1_count = len(characters) - 1
             elif right_strelka_ch1_rect.collidepoint(event.pos):
-                characters_count += 1
-                if characters_count >= len(characters):
-                    characters_count = 0
+                character1_count += 1
+                if character1_count >= len(characters):
+                    character1_count = 0
+            elif left_strelka_ch2_rect.collidepoint(event.pos):
+                character2_count -= 1
+                if character2_count < 0:
+                    character2_count = len(characters) - 1
+            elif right_strelka_ch2_rect.collidepoint(event.pos):
+                character2_count += 1
+                if character2_count >= len(characters):
+                    character2_count = 0
             elif sound_on_rect.collidepoint(event.pos) or sound_off_rect.collidepoint(event.pos):
                 sound_flag = not sound_flag  # Переключаем звук на противоположное состояние
                 if sound_flag:

@@ -4,7 +4,8 @@ user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
 
-characters_count = 0
+character1_count = 0
+character2_count = 1
 
 characters = [pygame.transform.scale(pygame.image.load("Characters_images/Ded_Maxim.png"),
                                      (user_screen_width, user_screen_height)),
