@@ -59,8 +59,8 @@ health = Healthbars(user_screen_width, user_screen_height)  # Объявляем
 
 heroes = pygame.sprite.Group()
 
-hero1 = Hero(x, y, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
-hero2 = Hero(x2, y2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT)
+hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT, character=DED_MAXIM)
+hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT, character=VURDALAK)
 
 health_dict = {hero1: health_1, hero2: health_2}
 
@@ -93,7 +93,7 @@ def play_video(clip):
 
 
 # Воспроизведение заставки
-play_video(video_clip)
+# play_video(video_clip)
 
 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
@@ -277,8 +277,8 @@ while running:
 
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, y, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
-                hero2 = Hero(x2, y2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
+                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
+                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
                              direction=LEFT)
 
                 health_dict = {hero1: health_1, hero2: health_2}
@@ -308,8 +308,8 @@ while running:
 
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, y, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
-                hero2 = Hero(x2, y2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
+                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
+                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
                              direction=LEFT)
 
                 health_dict = {hero1: health_1, hero2: health_2}

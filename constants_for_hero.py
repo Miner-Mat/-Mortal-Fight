@@ -5,3 +5,6 @@ SQUAT = 3
 
 LEFT = 4
 RIGHT = 5
+
+DED_MAXIM = 6
+VURDALAK = 7
