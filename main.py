@@ -277,8 +277,9 @@ while running:
 
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, y, ground, speed, power, jump_power, 1000, heroes, direction=RIGHT)
-                hero2 = Hero(x2, y2, ground, speed2, power2, jump_power2, 1000, heroes, direction=LEFT)
+                hero1 = Hero(x, y, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
+                hero2 = Hero(x2, y2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
+                             direction=LEFT)
 
                 health_dict = {hero1: health_1, hero2: health_2}
 
