@@ -78,7 +78,7 @@ class Hero(pygame.sprite.Sprite):
             self.masks_jump_l = [pygame.mask.from_surface(im) for im in self.anim_jump_l]
 
             self.anim_squat = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))
-                               for el in ded_maxim_squat]
+                               for el in vurdalak_squat]
             self.anim_squat_l = [pygame.transform.flip(el, True, False) for el in self.anim_squat]
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
@@ -183,6 +183,7 @@ class Hero(pygame.sprite.Sprite):
         '''
         # размеры предыдущей картинки для того, чтобы отцентрировать по ширине и оставить низ на той же высоте у новой
         last_image_width = self.image.get_width()
+        last_image_height = self.image.get_height()
         if self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]

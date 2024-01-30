@@ -1,4 +1,5 @@
 import pygame  # импортируем pygame
+import asyncio
 import os
 from moviepy.editor import VideoFileClip
 from healthbars import Healthbars  # Импортируем класс Healthbars
@@ -20,8 +21,7 @@ from hero import Hero
 from arens import arens, arenas_count
 from buttons_and_texts import *
 
-# Загрузка видеофайла для заставки
-video_clip = VideoFileClip("заставка.mp4")
+video_clip = VideoFileClip("заставка.mp4")  # Загрузка видезаставки
 
 # меняем размер в зависимости от экрана
 # video_clip = video_clip.resize(height=user_screen_height, width=user_screen_width)
@@ -59,14 +59,14 @@ health = Healthbars(user_screen_width, user_screen_height)  # Объявляем
 
 
 # Функция для воспроизведения видеозаставки
-def play_video(clip):
+async def play_video(clip):
     start_time = pygame.time.get_ticks()
     clip_audio = clip.audio.set_fps(44100)
     clip.audio.write_audiofile("temp_audio.wav")
     pygame.mixer.music.load('temp_audio.wav')
     pygame.mixer.music.play()
 
-    while pygame.mixer.music.get_busy():  # Проверка, идёт ли воспроизведение
+    while pygame.mixer.music.get_busy():
         elapsed = (pygame.time.get_ticks() - start_time) / 1000.0
         if elapsed > video_length:
             break
@@ -75,15 +75,21 @@ def play_video(clip):
         screen.blit(surf, (0, 0))
         pygame.display.flip()
         pygame.time.wait(int(1000 / clip.fps))
+        await asyncio.sleep(0)  # Позволяет другим задачам выполниться
 
-    pygame.mixer.music.stop()  # Останавливаем музыку
-    pygame.mixer.music.unload()  # Выгружаем трек
+    pygame.mixer.music.stop()
+    pygame.mixer.music.unload()
     if os.path.exists('temp_audio.wav'):
-        os.remove('temp_audio.wav')  # Удаляем файл после его использования
+        os.remove('temp_audio.wav')
 
+# Создание асинхронной функции для вызова воспроизведения заставки
+async def main():
+    video_clip = VideoFileClip("заставка.mp4")  # Загрузка видеоклипа
+    await play_video(video_clip)  # Вызов функции воспроизведения заставки
 
-# Воспроизведение заставки
-play_video(video_clip)
+# Создание и запуск цикла событий asyncio
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
 
 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость

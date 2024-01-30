@@ -63,3 +63,7 @@ vurdalak_jump = [pygame.image.load("Vurdalak_jump/Jump1.png"),
                  pygame.image.load("Vurdalak_jump/Jump2.png"),
                  pygame.image.load("Vurdalak_jump/Jump3.png"),
                  pygame.image.load("Vurdalak_jump/Jump4.png")]
+
+vurdalak_squat = [pygame.image.load("Vurdalak_squat/Squat_1.png"),
+                  pygame.image.load("Vurdalak_squat/Squat_2.png"),
+                  pygame.image.load("Vurdalak_squat/Squat_3.png")]
