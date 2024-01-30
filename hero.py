@@ -2,6 +2,14 @@ import pygame
 from animations import *
 from constants_for_hero import *
 
+# Инициализация Pygame
+pygame.init()
+user_screen_info = pygame.display.Info()
+user_screen_width = user_screen_info.current_w
+user_screen_height = user_screen_info.current_h
+
+screen = pygame.display.set_mode((user_screen_width, user_screen_height))  # Задаём разрешение основного окна
+
 
 class Hero(pygame.sprite.Sprite):
     '''
@@ -23,19 +31,19 @@ class Hero(pygame.sprite.Sprite):
         '''
         super().__init__(*groups)
         if character == DED_MAXIM:
-            self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height)) \
+            self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height))
                               for el in ded_maxim_stay]
             self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
             self.masks_stay = [pygame.mask.from_surface(im) for im in self.anim_stay]
             self.masks_stay_l = [pygame.mask.from_surface(im) for im in self.anim_stay_l]
 
-            self.anim_fight = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height)) \
+            self.anim_fight = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))
                                for el in ded_maxim_fight]
             self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
             self.masks_fight = [pygame.mask.from_surface(im) for im in self.anim_fight]
             self.masks_fight_l = [pygame.mask.from_surface(im) for im in self.anim_fight_l]
 
-            self.anim_run = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height)) \
+            self.anim_run = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))
                              for el in ded_maxim_run]
             self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
             self.masks_run = [pygame.mask.from_surface(im) for im in self.anim_run]
@@ -53,19 +61,19 @@ class Hero(pygame.sprite.Sprite):
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
         elif character == VURDALAK:
-            self.anim_stay = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.32 * user_screen_height)) \
+            self.anim_stay = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.32 * user_screen_height))
                               for el in vurdalak_stay]
             self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
             self.masks_stay = [pygame.mask.from_surface(im) for im in self.anim_stay]
             self.masks_stay_l = [pygame.mask.from_surface(im) for im in self.anim_stay_l]
 
-            self.anim_fight = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.35 * user_screen_height)) \
+            self.anim_fight = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.35 * user_screen_height))
                                for el in vurdalak_fight]
             self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
             self.masks_fight = [pygame.mask.from_surface(im) for im in self.anim_fight]
             self.masks_fight_l = [pygame.mask.from_surface(im) for im in self.anim_fight_l]
 
-            self.anim_run = [pygame.transform.scale(el, (0.14 * user_screen_width, 0.32 * user_screen_height)) \
+            self.anim_run = [pygame.transform.scale(el, (0.14 * user_screen_width, 0.32 * user_screen_height))
                              for el in vurdalak_run]
             self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
             self.masks_run = [pygame.mask.from_surface(im) for im in self.anim_run]

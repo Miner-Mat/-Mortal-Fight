@@ -4,6 +4,9 @@ import os
 from moviepy.editor import VideoFileClip
 from healthbars import Healthbars  # Импортируем класс Healthbars
 from constants_for_hero import *
+from hero import Hero
+from arens import arens, arenas_count
+from buttons_and_texts import *
 
 # Инициализация Pygame
 pygame.init()
@@ -16,10 +19,6 @@ screen = pygame.display.set_mode((user_screen_width, user_screen_height))  # З�
 pygame.display.set_caption("Mortal Fight")  # Задаём название программе
 icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
-
-from hero import Hero
-from arens import arens, arenas_count
-from buttons_and_texts import *
 
 video_clip = VideoFileClip("заставка.mp4")  # Загрузка видезаставки
 
@@ -81,6 +80,7 @@ async def play_video(clip):
     pygame.mixer.music.unload()
     if os.path.exists('temp_audio.wav'):
         os.remove('temp_audio.wav')
+
 
 # Создание асинхронной функции для вызова воспроизведения заставки
 async def main():
@@ -182,6 +182,7 @@ while running:
         screen.blit(right_strelka_ch2, right_strelka_ch2_rect)
         screen.blit(ch1_choice_text, (0.6 * user_screen_width, 0.54 * user_screen_height))
         screen.blit(ch2_choice_text, (0.8 * user_screen_width, 0.54 * user_screen_height))
+        screen.blit(control_image, control_rect)
         if sound_flag:
             screen.blit(sound_on, sound_on_rect)
         else:
@@ -300,7 +301,9 @@ while running:
 
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
-
+            elif control_rect.collidepoint(event.pos):
+                sound.play()
+                screen.blit(control_layout, control_layout_rect)
             elif back_button.collidepoint(event.pos):
                 sound.play()
                 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку

@@ -79,7 +79,7 @@ right_strelka_ch1_rect = right_strelka_ch1.get_rect(topleft=(0.68 * user_screen_
 
 # Окно выбора второго персонажа
 character2_choice_window = pygame.Rect(0.77 * user_screen_width, 0.6 * user_screen_height,
-                                      0.1 * user_screen_width, 0.3 * user_screen_height)
+                                       0.1 * user_screen_width, 0.3 * user_screen_height)
 character2_choice = pygame.transform.scale(characters[character2_count], character2_choice_window.size)
 character2_choice_rect = character2_choice.get_rect(center=character2_choice_window.center)
 
@@ -117,3 +117,13 @@ ch1_choice_text = ch1_choice_text_font.render("P1", True, (255, 107, 107))
 # Второй персонаж выбор
 ch2_choice_text_font = pygame.font.Font("Fonts/unispace bd.ttf", int(user_screen_height * 0.04))
 ch2_choice_text = ch2_choice_text_font.render("P2", True, (255, 107, 107))
+
+# Кнопка открытия раскладки клавиатуры
+control_image = pygame.transform.scale(pygame.image.load("control_button.png"),
+                                       (0.07 * user_screen_width, 0.07 * user_screen_height))
+control_rect = control_image.get_rect(topleft=(0.06 * user_screen_width, 0.09 * user_screen_height))
+
+# Окно раскладки клавиатуры
+control_layout = pygame.transform.scale(pygame.image.load("conrol_layout.png"),
+                                        (user_screen_width, user_screen_height))
+control_layout_rect = control_layout.get_rect(topleft=(0.01 * user_screen_width, 0.01 * user_screen_height))
