@@ -71,14 +71,14 @@ class Hero(pygame.sprite.Sprite):
             self.masks_run = [pygame.mask.from_surface(im) for im in self.anim_run]
             self.masks_run_l = [pygame.mask.from_surface(im) for im in self.anim_run_l]
 
-            self.anim_jump = [pygame.transform.scale(el, (0.22 * user_screen_width, 0.28 * user_screen_height))
+            self.anim_jump = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))
                               for el in vurdalak_jump]
             self.anim_jump_l = [pygame.transform.flip(el, True, False) for el in self.anim_jump]
             self.masks_jump = [pygame.mask.from_surface(im) for im in self.anim_jump]
             self.masks_jump_l = [pygame.mask.from_surface(im) for im in self.anim_jump_l]
 
-            self.anim_squat = [pygame.transform.scale(el, (0.2 * user_screen_width, 0.28 * user_screen_height))
-                               for el in ded_maxim_squat]
+            self.anim_squat = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))
+                               for el in vurdalak_squat]
             self.anim_squat_l = [pygame.transform.flip(el, True, False) for el in self.anim_squat]
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
