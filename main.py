@@ -1,6 +1,5 @@
 import pygame  # импортируем pygame
 import asyncio
-import time
 import os
 from moviepy.editor import VideoFileClip
 from healthbars import Healthbars  # Импортируем класс Healthbars
