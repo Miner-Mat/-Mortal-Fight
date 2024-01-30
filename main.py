@@ -57,16 +57,6 @@ ch_win_flag = False  # Флаг, означсающий что один из и�
 
 health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
 
-heroes = pygame.sprite.Group()
-
-hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT, character=DED_MAXIM)
-hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT, character=VURDALAK)
-
-health_dict = {hero1: health_1, hero2: health_2}
-
-hero1.set_enemy(hero2, health_dict)
-hero2.set_enemy(hero1, health_dict)
-
 
 # Функция для воспроизведения видеозаставки
 def play_video(clip):
@@ -93,7 +83,7 @@ def play_video(clip):
 
 
 # Воспроизведение заставки
-# play_video(video_clip)
+play_video(video_clip)
 
 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
@@ -160,10 +150,13 @@ clock = pygame.time.Clock()
 
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-    arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
-    character_choice = pygame.transform.scale(characters[character1_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
-    character2_choice = pygame.transform.scale(characters[character2_count], (0.09 * user_screen_width, 0.3 * user_screen_height))
+
     if flag == MENU_WINDOW:
+        arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
+        character_choice = pygame.transform.scale(characters[character1_count],
+                                                  (0.09 * user_screen_width, 0.3 * user_screen_height))
+        character2_choice = pygame.transform.scale(characters[character2_count],
+                                                   (0.09 * user_screen_width, 0.3 * user_screen_height))
         screen.fill((192, 6, 13))
         screen.blit(text_surface, ((user_screen_width - text_surface.get_width()) / 2, 0.04 * user_screen_height))
         pygame.draw.rect(screen, (170, 0, 0), play_button)
@@ -225,6 +218,20 @@ while running:
                 else:
                     pygame.mixer.music.set_volume(0)
                 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
+
+                # создаем персонажей
+                heroes = pygame.sprite.Group()
+
+                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                             character=ALL_CHARACTERS[character1_count])
+                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                             character=ALL_CHARACTERS[character2_count])
+
+                health_dict = {hero1: health_1, hero2: health_2}
+
+                hero1.set_enemy(hero2, health_dict)
+                hero2.set_enemy(hero1, health_dict)
+
             elif left_strelka_rect.collidepoint(event.pos):
                 sound.play()
                 arenas_count -= 1
@@ -275,11 +282,13 @@ while running:
                 power2 = 30
                 jump_power2 = 20
 
+                # создаем персонажей
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
-                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
-                             direction=LEFT)
+                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                             character=ALL_CHARACTERS[character1_count])
+                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                             character=ALL_CHARACTERS[character2_count])
 
                 health_dict = {hero1: health_1, hero2: health_2}
 
@@ -306,11 +315,13 @@ while running:
                 power2 = 30
                 jump_power2 = 20
 
+                # создаем персонажей
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT)
-                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes,
-                             direction=LEFT)
+                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                             character=ALL_CHARACTERS[character1_count])
+                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                             character=ALL_CHARACTERS[character2_count])
 
                 health_dict = {hero1: health_1, hero2: health_2}
 
@@ -320,7 +331,7 @@ while running:
             elif exit_button.collidepoint(event.pos):
                 running = False
 
-        if event.type == UPDATE_FRAMES:
+        if event.type == UPDATE_FRAMES and flag == FIGHT_WINDOW:
             heroes.update()
 
         if event.type == pygame.QUIT:

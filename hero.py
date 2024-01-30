@@ -59,19 +59,19 @@ class Hero(pygame.sprite.Sprite):
             self.masks_stay = [pygame.mask.from_surface(im) for im in self.anim_stay]
             self.masks_stay_l = [pygame.mask.from_surface(im) for im in self.anim_stay_l]
 
-            self.anim_fight = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.27 * user_screen_height)) \
+            self.anim_fight = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.35 * user_screen_height)) \
                                for el in vurdalak_fight]
             self.anim_fight_l = [pygame.transform.flip(el, True, False) for el in self.anim_fight]
             self.masks_fight = [pygame.mask.from_surface(im) for im in self.anim_fight]
             self.masks_fight_l = [pygame.mask.from_surface(im) for im in self.anim_fight_l]
 
-            self.anim_run = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.32 * user_screen_height)) \
+            self.anim_run = [pygame.transform.scale(el, (0.14 * user_screen_width, 0.32 * user_screen_height)) \
                              for el in vurdalak_run]
             self.anim_run_l = [pygame.transform.flip(el, True, False) for el in self.anim_run]
             self.masks_run = [pygame.mask.from_surface(im) for im in self.anim_run]
             self.masks_run_l = [pygame.mask.from_surface(im) for im in self.anim_run_l]
 
-            self.anim_jump = [pygame.transform.scale(el, (0.22 * user_screen_width, 0.28 * user_screen_height))
+            self.anim_jump = [pygame.transform.scale(el, (0.16 * user_screen_width, 0.26 * user_screen_height))
                               for el in vurdalak_jump]
             self.anim_jump_l = [pygame.transform.flip(el, True, False) for el in self.anim_jump]
             self.masks_jump = [pygame.mask.from_surface(im) for im in self.anim_jump]
@@ -183,7 +183,6 @@ class Hero(pygame.sprite.Sprite):
         '''
         # размеры предыдущей картинки для того, чтобы отцентрировать по ширине и оставить низ на той же высоте у новой
         last_image_width = self.image.get_width()
-        last_image_height = self.image.get_height()
         if self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]
@@ -209,10 +208,9 @@ class Hero(pygame.sprite.Sprite):
                 else self.masks_stay_l[self.cur_frame_stay]
 
         new_image_width = self.image.get_width()
-        new_image_height = self.image.get_height()
 
         # выравниваем новый кадр анимации
-        self.rect = self.rect.move((last_image_width - new_image_width) / 2, last_image_height - new_image_height)
+        self.rect = self.rect.move((last_image_width - new_image_width) / 2, 0)
 
     def process_events(self, flags):
         '''
