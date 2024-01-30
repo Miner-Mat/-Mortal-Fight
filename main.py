@@ -319,6 +319,7 @@ while running:
                 speed = 0.015 * user_screen_height
                 power = 30
                 jump_power = 20
+
                 x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
                 speed2 = 0.015 * user_screen_height
                 power2 = 30

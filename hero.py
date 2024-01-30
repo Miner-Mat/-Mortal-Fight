@@ -31,6 +31,8 @@ class Hero(pygame.sprite.Sprite):
         '''
         super().__init__(*groups)
         if character == DED_MAXIM:
+            speed = 0.01 * user_screen_height
+            power = 30
             self.anim_stay = [pygame.transform.scale(el, (0.09 * user_screen_width, 0.28 * user_screen_height))
                               for el in ded_maxim_stay]
             self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
@@ -61,6 +63,8 @@ class Hero(pygame.sprite.Sprite):
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
         elif character == VURDALAK:
+            speed = 0.02 * user_screen_height
+            power = 15
             self.anim_stay = [pygame.transform.scale(el, (0.12 * user_screen_width, 0.32 * user_screen_height))
                               for el in vurdalak_stay]
             self.anim_stay_l = [pygame.transform.flip(el, True, False) for el in self.anim_stay]
