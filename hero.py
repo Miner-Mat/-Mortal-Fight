@@ -209,6 +209,7 @@ class Hero(pygame.sprite.Sprite):
                 else self.masks_stay_l[self.cur_frame_stay]
 
         new_image_width = self.image.get_width()
+        new_image_height = self.image.get_height()
 
         # выравниваем новый кадр анимации
         self.rect = self.rect.move((last_image_width - new_image_width) / 2, 0)
