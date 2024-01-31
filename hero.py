@@ -62,6 +62,11 @@ class Hero(pygame.sprite.Sprite):
             self.anim_squat_l = [pygame.transform.flip(el, True, False) for el in self.anim_squat]
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
+
+            self.anim_dead = [pygame.transform.scale(el, (0.16 * user_screen_width, 0.28 * user_screen_height))
+                               for el in ded_maxim_dead]
+            self.anim_dead_l = [pygame.transform.flip(el, True, False) for el in self.anim_dead]
+            # для смерти маски уже не нужны
         elif character == VURDALAK:
             speed = 0.02 * user_screen_height
             power = 15
@@ -95,6 +100,11 @@ class Hero(pygame.sprite.Sprite):
             self.masks_squat = [pygame.mask.from_surface(im) for im in self.anim_squat]
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
 
+            self.anim_dead = [pygame.transform.scale(el, (0.15 * user_screen_width, 0.28 * user_screen_height))
+                              for el in vurdalak_dead]
+            self.anim_dead_l = [pygame.transform.flip(el, True, False) for el in self.anim_dead]
+            # для смерти маски уже не нужны
+
         self.is_enemy_hit = False  # флаг для того, чтобы нельзя было одним ударом нанести урон несколько раз
         self.hiten = 0  # флаг был ли ударен персонаж для кратковременной смены цвета.
         # Численно равен количеству перекрашенных кадров анимации
@@ -104,6 +114,7 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame_run = 0
         self.cur_frame_jump = 0
         self.cur_frame_squat = 0
+        self.cur_frame_dead = 0
 
         self.is_run = False
         self.is_fight = False
@@ -184,6 +195,10 @@ class Hero(pygame.sprite.Sprite):
                 self.cur_frame_squat = 0
                 self.is_squat = False
 
+        if self.is_dead:
+            if self.cur_frame_dead < len(self.anim_dead) - 1:
+                self.cur_frame_dead += 1
+
         if self.hiten:
             self.image = self.image.copy()
             self.image.set_alpha(200)
@@ -197,7 +212,11 @@ class Hero(pygame.sprite.Sprite):
         # размеры предыдущей картинки для того, чтобы отцентрировать по ширине и оставить низ на той же высоте у новой
         last_image_width = self.image.get_width()
         last_image_height = self.image.get_height()
-        if self.is_fight:
+        if self.is_dead:  # смерть - непрерываемый процесс, он перекрывает все остальные события
+            self.image = self.anim_dead[self.cur_frame_dead] if self.right \
+                else self.anim_dead_l[self.cur_frame_dead]
+
+        elif self.is_fight:
             self.image = self.anim_fight[self.cur_frame_fight] if self.right\
                 else self.anim_fight_l[self.cur_frame_fight]
             self.mask = self.masks_fight[self.cur_frame_fight] if self.right\
@@ -234,6 +253,9 @@ class Hero(pygame.sprite.Sprite):
         :return:
         '''
         current_time = pygame.time.get_ticks()
+
+        if DEAD in flags:
+            self.is_dead = True
 
         if RUN in flags:
             self.is_run = True

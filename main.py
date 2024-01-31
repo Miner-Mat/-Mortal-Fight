@@ -153,6 +153,8 @@ flag = MENU_WINDOW
 running = True  # флаг работы
 sound_flag = True  # флаг нынешнего состояния звука
 
+control_button_presed = False
+
 clock = pygame.time.Clock()
 
 while running:
@@ -189,6 +191,9 @@ while running:
         else:
             screen.blit(sound_off, sound_off_rect)
 
+        if control_button_presed:
+            screen.blit(control_layout, control_layout_rect)
+
     elif flag == FIGHT_WINDOW:
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
         health.draw(screen, health_dict[hero1], health_dict[hero2])
@@ -209,11 +214,17 @@ while running:
             ch_win_flag = True
             pygame.draw.rect(screen, (170, 0, 0), restart_button)
             screen.blit(restart_image, restart_image_rect)
+
+            # запускаем анимацию смерти
+            hero1.process_events([DEAD])
         elif health_dict[hero2] <= 0:
             screen.blit(ch1_win_text, (0.25 * user_screen_width, 0.46 * user_screen_height))
             ch_win_flag = True
             pygame.draw.rect(screen, (170, 0, 0), restart_button)
             screen.blit(restart_image, restart_image_rect)
+
+            # запускаем анимацию смерти
+            hero2.process_events([DEAD])
 
     pygame.display.update()  # обновляем окно
 
@@ -305,8 +316,8 @@ while running:
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
             elif control_rect.collidepoint(event.pos):
+                control_button_presed = True
                 sound.play()
-                screen.blit(control_layout, control_layout_rect)
             elif pause_image_rect.collidepoint(event.pos) or play_image_rect.collidepoint(event.pos):
                 sound.play()
                 pause_flag = not pause_flag
