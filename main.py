@@ -133,9 +133,11 @@ def key_check():  # Проверка нажатий
         if keys[pygame.K_h]:
             res2.append(FIGHT)
 
+        # отправляем флаги в обработчик событий персонажа
         hero1.process_events(res1)
         hero2.process_events(res2)
 
+        # вызываем метод для обработки передвижений, ударов и прыжков персонажа
         hero1.move()
         hero2.move()
 
@@ -146,12 +148,12 @@ pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 
 health.health_on_all_arenas(arens)  # рисует хелф бары на всех аренах для отображения в меню
 
-flag = MENU_WINDOW
+flag = MENU_WINDOW  # флаг, показывающий активное окно
 
 running = True  # флаг работы
 sound_flag = True  # флаг нынешнего состояния звука
 
-control_button_pressed = False
+control_button_pressed = False  # открыта ли помощь по управлению
 
 clock = pygame.time.Clock()
 
@@ -159,6 +161,7 @@ while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
     if flag == MENU_WINDOW:
+        # отрисовка всех компонентов
         arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
         character_choice = pygame.transform.scale(characters[character1_count],
                                                   (0.09 * user_screen_width, 0.3 * user_screen_height))
@@ -189,6 +192,7 @@ while running:
         else:
             screen.blit(sound_off, sound_off_rect)
 
+        # если нажали кнопку с помощью, отрисовываем окно с показом управления
         if control_button_pressed:
             screen.blit(control_layout, control_layout_rect)
             screen.blit(back_image_from_control, back_image_rect_from_control)
@@ -208,14 +212,15 @@ while running:
 
         heroes.draw(screen)
 
+        # проверка поражения персонажей
         if health_dict[hero1] <= 0:
             screen.blit(ch2_win_text, (0.25 * user_screen_width, 0.46 * user_screen_height))
             ch_win_flag = True
             pygame.draw.rect(screen, (170, 0, 0), restart_button)
             screen.blit(restart_image, restart_image_rect)
-
             # запускаем анимацию смерти
             hero1.process_events([DEAD])
+
         elif health_dict[hero2] <= 0:
             screen.blit(ch1_win_text, (0.25 * user_screen_width, 0.46 * user_screen_height))
             ch_win_flag = True

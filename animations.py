@@ -1,5 +1,10 @@
 import pygame  # Импортируем pygame
 
+
+'''
+Файл содержит все анимации персонажей
+'''
+
 # Анимации деда Максима в момент неподвижности вправо
 ded_maxim_stay = [pygame.image.load("Character_st/1st.png"),
                   pygame.image.load("Character_st/2st.png"),

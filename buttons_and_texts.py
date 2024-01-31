@@ -3,6 +3,10 @@ import pygame  # Импортируем pygame
 from arens import arens, arenas_count
 from characters import characters, character1_count, character2_count
 
+'''
+Файл, содержащий создание кнопок, текстов и изображений на кнопках
+'''
+
 # Собираем информацию о разрешении экрана пользователя
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
