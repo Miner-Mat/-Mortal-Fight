@@ -21,9 +21,6 @@ icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
 
 video_clip = VideoFileClip("заставка.mp4")  # Загрузка видезаставки
-
-# меняем размер в зависимости от экрана
-# video_clip = video_clip.resize(height=user_screen_height, width=user_screen_width)
 video_length = video_clip.duration  # продолжительность видео в секундах
 
 pygame.mixer.init()  # инициализируем функцию добавления музыки
@@ -32,6 +29,7 @@ pygame.mixer.init()  # инициализируем функцию добавл�
 MENU_WINDOW = 0
 FIGHT_WINDOW = 1
 
+# Линия земли, на которой стоят персонажи
 ground = int(0.94 * user_screen_height)
 
 # Определяющие положение персонажа переменные
@@ -59,9 +57,8 @@ health = Healthbars(user_screen_width, user_screen_height)  # Объявляем
 
 
 # Функция для воспроизведения видеозаставки
-async def play_video(clip):
+async def play_video(clip):  # Создаём функцию для проигрыша видео, она выполняется асинхронно
     start_time = pygame.time.get_ticks()
-    clip_audio = clip.audio.set_fps(44100)
     clip.audio.write_audiofile("temp_audio.wav")
     pygame.mixer.music.load('temp_audio.wav')
     pygame.mixer.music.play()
@@ -96,8 +93,8 @@ pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
 pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
-sound = pygame.mixer.Sound("turn.mp3")
-sound_2 = pygame.mixer.Sound("slap.mp3")
+sound = pygame.mixer.Sound("turn.mp3")  # звук нажатия на кнопку
+sound_2 = pygame.mixer.Sound("slap.mp3")  # звук попадания по персонажам
 
 
 def key_check():  # Проверка нажатий
@@ -105,8 +102,9 @@ def key_check():  # Проверка нажатий
     Функция для проверки нажатий на клавиши и их обработки
     :return:
     '''
-    keys = pygame.key.get_pressed()
-    res1 = []  # списки с флагами, которые передадим в классы персонажей
+    keys = pygame.key.get_pressed()  # Обработчик нажатия клавиш
+    # списки с флагами, которые передадим в классы персонажей
+    res1 = []
     res2 = []
     if not ch_win_flag and not pause_flag:
         if keys[pygame.K_a]:
