@@ -1,16 +1,16 @@
-import pygame  # импортируем pygame
-import asyncio
-import os
-from moviepy.editor import VideoFileClip
+import pygame  # импортируем pygame как игровой движок
+import asyncio  # импортируем asyncio для создания асинхронности
+import os  # импортируем os для работы с файлами
+from moviepy.editor import VideoFileClip  # импортируем нужную функцию из moviepy для создания видеозаставки
 from healthbars import Healthbars  # Импортируем класс Healthbars
-from constants_for_hero import *
-from hero import Hero
-from arens import arens, arenas_count
+from constants_for_hero import *  # Импортируем все константы персонажей
+from hero import Hero  # импортируем класс Hero
 from buttons_and_texts import *
 
 # Инициализация Pygame
 pygame.init()
 
+# Собираем информацию о разрешении экрана пользователя
 user_screen_info = pygame.display.Info()
 user_screen_width = user_screen_info.current_w
 user_screen_height = user_screen_info.current_h
