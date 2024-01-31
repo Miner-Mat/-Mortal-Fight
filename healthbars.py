@@ -1,15 +1,16 @@
-import pygame
+import pygame  # Импортируем pygame
 
 
+# Создаём класс полосок здоровья
 class Healthbars():
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height):  # Инициализируем класс
         self.screen_width = screen_width
         self.screen_height = screen_height
 
     def health_on_all_arenas(self, arenas):
         for arena in arenas:
             pygame.draw.rect(arena, (255, 255, 255),  # цвет
-                             (0.02 * self.screen_width - 2, 0.02 * self.screen_height - 2,  # начало
+                             (0.02 * self.screen_width - 2, 0.02 * self.screen_height - 2,  # положение
                               100 * 3 + 4, 44))  # размер
             pygame.draw.rect(arena, (0, 255, 0),
                              (0.02 * self.screen_width, 0.02 * self.screen_height, 100 * 3, 40))
