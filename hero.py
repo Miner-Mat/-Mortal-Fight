@@ -26,8 +26,12 @@ class Hero(pygame.sprite.Sprite):
         :param enemy_group: группа спрайтов противников
         :param groups: группы спрайтов
         :param direction: направление персонажа. Константа программы constants_for_hero
+        :param character: имя выбранного персонажа. Константа программы constants_for_hero
         '''
         super().__init__(*groups)
+        # загружаем разные анимации в зависимости от выбранного персонажа
+        # для каждого состояния героя загружаем обычные,
+        # отраженные налево анимации и для каждой картинки вычисляем маску
         if character == DED_MAXIM:
             speed = 0.01 * user_screen_height
             power = 30
@@ -107,6 +111,7 @@ class Hero(pygame.sprite.Sprite):
         self.hiten = 0  # флаг был ли ударен персонаж для кратковременной смены цвета.
         # Численно равен количеству перекрашенных кадров анимации
 
+        # счетчики текущих кадров анимации
         self.cur_frame_stay = 0
         self.cur_frame_fight = 0
         self.cur_frame_run = 0
@@ -114,12 +119,14 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame_squat = 0
         self.cur_frame_dead = 0
 
+        # флаги, показывающие какое действие выполняет герой
         self.is_run = False
         self.is_fight = False
         self.is_jump = False
         self.is_squat = False
         self.is_dead = False
 
+        # флаги направления
         if direction == LEFT:
             self.left = True
             self.right = False
@@ -127,29 +134,34 @@ class Hero(pygame.sprite.Sprite):
             self.left = False
             self.right = True
 
+        # присваиваем текущую картинку, маску и размещаем бойца
         self.image = self.anim_stay[self.cur_frame_stay] if self.right else self.anim_stay_l[self.cur_frame_stay]
         self.mask = self.masks_stay[self.cur_frame_stay] if self.right else self.masks_stay_l[self.cur_frame_stay]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, ground - self.rect.height
-        self.ground = ground
 
-        self.fight_enabled = True
+        self.ground = ground  # линия земли
 
+        self.fight_enabled = True  # флаг возможности атаки
+
+        # параметры персонажа
         self.speed = speed
         self.power = power
         self.jump_power = jump_power
         self.throw_back_power = throw_back_power
 
-        self.jump_speed = 0
-        self.jump_enable = True
+        # переменные для обработки прыжка
+        self.jump_speed = 0  # сюда присваивается скорость, с которой падает или поднимается персонаж в данный момент
+        self.jump_enable = True  # флаг возможности прыжка
 
-        self.fight_cool_down = fight_cool_down
-        self.last_fight_time = 0
+        self.fight_cool_down = fight_cool_down  # время, которое нельзя атаковать после использования удара
+        self.last_fight_time = 0  # время последней атаки
 
     def set_enemy(self, enemy, health_dict):
         '''
         Назначить врага персонажа
         :param enemy: враг, объект pygame.Sprite
+        :param health_dict: словарб, который содержит хдоровье персонажей. Ключом здоровья противника является enemy
         :return:
         '''
         self.enemy = enemy
@@ -197,11 +209,6 @@ class Hero(pygame.sprite.Sprite):
             if self.cur_frame_dead < len(self.anim_dead) - 1:
                 self.cur_frame_dead += 1
 
-        if self.hiten:
-            self.image = self.image.copy()
-            self.image.set_alpha(200)
-            self.hiten -= 1
-
     def image_swap(self):
         '''
         Метод присваивает спрайту картинку и маску в зависимости от счетччика анимаций и флагов состояния персонажа
@@ -238,6 +245,12 @@ class Hero(pygame.sprite.Sprite):
             self.mask = self.masks_stay[self.cur_frame_stay] if self.right \
                 else self.masks_stay_l[self.cur_frame_stay]
 
+        # если персонажа ударили, делаем картинку полупрозрачной
+        if self.hiten:
+            self.image = self.image.copy()
+            self.image.set_alpha(200)
+            self.hiten -= 1
+
         new_image_width = self.image.get_width()
         new_image_height = self.image.get_height()
 
@@ -252,6 +265,7 @@ class Hero(pygame.sprite.Sprite):
         '''
         current_time = pygame.time.get_ticks()
 
+        # проверка на флаги состояний и примваивание нужных значений флагам
         if DEAD in flags:
             self.is_dead = True
 
@@ -290,6 +304,7 @@ class Hero(pygame.sprite.Sprite):
         :return:
         '''
         global screen
+        # двигаем персонажа в зависимости от флагов
         if self.is_run:
             if self.left:
                 if self.rect.x - self.speed > 0:
@@ -317,6 +332,8 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_enable = True
                 self.is_jump = False
                 self.cur_frame_jump = 0
+
+        # обрабатываем атаку
         if self.is_fight:
             if not self.is_enemy_hit and pygame.sprite.collide_mask(self, self.enemy)\
                     and (self.rect.x <= self.enemy.rect.x if self.right else self.rect.x >= self.enemy.rect.x)\
