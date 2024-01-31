@@ -53,6 +53,7 @@ health_1 = 100
 health_2 = 100
 
 ch_win_flag = False  # Флаг, означсающий что один из игроков победил
+pause_flag = False  # Флаг, означающий что игра находится на паузе
 
 health = Healthbars(user_screen_width, user_screen_height)  # Объявляем класс хэлфбаров
 
@@ -107,7 +108,7 @@ def key_check():  # Проверка нажатий
     keys = pygame.key.get_pressed()
     res1 = []  # списки с флагами, которые передадим в классы персонажей
     res2 = []
-    if not ch_win_flag:
+    if not ch_win_flag and not pause_flag:
         if keys[pygame.K_a]:
             res1.append(LEFT)
             res1.append(RUN)
@@ -195,7 +196,10 @@ while running:
         screen.blit(back_image, back_image_rect)
         screen.blit(ch1_text, (0.02 * user_screen_width, 0.05 * user_screen_height))
         screen.blit(ch2_text, (0.8 * user_screen_width, 0.05 * user_screen_height))
-
+        if not pause_flag:
+            screen.blit(pause_image, pause_image_rect)
+        else:
+            screen.blit(play_image, play_image_rect)
         key_check()  # вызываем проверку нажатий
 
         heroes.draw(screen)
@@ -278,7 +282,6 @@ while running:
                     pygame.mixer.music.set_volume(0)
             elif restart_button.collidepoint(event.pos):
                 sound.play()
-                flag = FIGHT_WINDOW
                 ch_win_flag = False
                 x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
                 speed = 0.015 * user_screen_height
@@ -304,7 +307,11 @@ while running:
             elif control_rect.collidepoint(event.pos):
                 sound.play()
                 screen.blit(control_layout, control_layout_rect)
+            elif pause_image_rect.collidepoint(event.pos) or play_image_rect.collidepoint(event.pos):
+                sound.play()
+                pause_flag = not pause_flag
             elif back_button.collidepoint(event.pos):
+                pause_flag = False
                 sound.play()
                 pygame.mixer.music.load("menu_music.mp3")  # Загружаем музыку
                 if sound_flag:

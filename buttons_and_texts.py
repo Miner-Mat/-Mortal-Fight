@@ -127,3 +127,13 @@ control_rect = control_image.get_rect(topleft=(0.06 * user_screen_width, 0.09 * 
 control_layout = pygame.transform.scale(pygame.image.load("conrol_layout.png"),
                                         (user_screen_width, user_screen_height))
 control_layout_rect = control_layout.get_rect(topleft=(0.01 * user_screen_width, 0.01 * user_screen_height))
+
+# Кнопка паузы
+pause_image = pygame.transform.scale(pygame.image.load("pause.png").convert_alpha(),
+                                     (0.03 * user_screen_width, 0.04 * user_screen_height))
+pause_image_rect = pause_image.get_rect(topleft=(0.53 * user_screen_width, 0.03 * user_screen_height))
+
+# Кнопка продолжения игры
+play_image = pygame.transform.scale(pygame.image.load("play.png").convert_alpha(),
+                                    (0.03 * user_screen_width, 0.04 * user_screen_height))
+play_image_rect = play_image.get_rect(topleft=(0.53 * user_screen_width, 0.03 * user_screen_height))
