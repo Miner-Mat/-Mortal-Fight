@@ -109,6 +109,7 @@ class Hero(pygame.sprite.Sprite):
         self.is_fight = False
         self.is_jump = False
         self.is_squat = False
+        self.is_dead = False
 
         if direction == LEFT:
             self.left = True

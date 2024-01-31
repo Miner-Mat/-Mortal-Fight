@@ -29,6 +29,11 @@ ded_maxim_jump = [pygame.image.load("Character_jump/Jump_3.png"), pygame.image.l
 ded_maxim_squat = [pygame.image.load('Character_squat/Squat_1.png'), pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_3.png'),
                    pygame.image.load('Character_squat/Squat_3.png'), pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_1.png')]
 
+# Анимации деда Максима во время смерти
+ded_maxim_dead = [pygame.image.load("Character_dead/Dead_1.png"), pygame.image.load("Character_dead/Dead_2.png"),
+                  pygame.image.load("Character_dead/Dead_3.png"), pygame.image.load("Character_dead/Dead_4.png"),
+                  pygame.image.load("Character_dead/Dead_5.png")]
+
 # Анимации Вурдалака во время неподвижности вправо
 vurdalak_stay = [pygame.image.load("Vurdalak_st/St_1.png"),
                  pygame.image.load("Vurdalak_st/St_2.png"),
@@ -62,3 +67,7 @@ vurdalak_jump = [pygame.image.load("Vurdalak_jump/Jump1.png"),
 vurdalak_squat = [pygame.image.load("Vurdalak_squat/Squat_1.png"),
                   pygame.image.load("Vurdalak_squat/Squat_2.png"),
                   pygame.image.load("Vurdalak_squat/Squat_3.png")]
+
+vurdalak_dead = [pygame.image.load("Vurdalak_dead/Dead_1.png"), pygame.image.load("Vurdalak_dead/Dead_2.png"),
+                 pygame.image.load("Vurdalak_dead/Dead_3.png"), pygame.image.load("Vurdalak_dead/Dead_4.png"),
+                 pygame.image.load("Vurdalak_dead/Dead_5.png"), pygame.image.load("Vurdalak_dead/Dead_6.png")]
