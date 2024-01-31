@@ -132,7 +132,7 @@ control_layout_rect = control_layout.get_rect(topleft=(0.01 * user_screen_width,
 
 # кнопка возврата из окна с показом управления
 back_button_from_control = pygame.Rect(0.96 * user_screen_width / 2, 0.02 * user_screen_height,
-                          0.15 * user_screen_width, 0.06 * user_screen_height)
+                          0.25 * user_screen_width, 0.06 * user_screen_height)
 back_image_from_control = pygame.transform.scale(pygame.image.load("krest.png").convert_alpha(),
                                     (0.05 * user_screen_width, 0.06 * user_screen_height))
 back_image_rect_from_control = back_image_from_control.get_rect(center=back_button_from_control.center)
