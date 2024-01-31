@@ -248,9 +248,9 @@ while running:
                 # создаем персонажей
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                hero1 = Hero(x, ground, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
                              character=ALL_CHARACTERS[character1_count])
-                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                hero2 = Hero(x2, ground, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
                              character=ALL_CHARACTERS[character2_count])
 
                 health_dict = {hero1: health_1, hero2: health_2}
@@ -313,9 +313,9 @@ while running:
                 # создаем персонажей
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                hero1 = Hero(x, ground, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
                              character=ALL_CHARACTERS[character1_count])
-                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                hero2 = Hero(x2, ground, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
                              character=ALL_CHARACTERS[character2_count])
 
                 health_dict = {hero1: health_1, hero2: health_2}
@@ -353,9 +353,9 @@ while running:
                 # создаем персонажей
                 heroes = pygame.sprite.Group()
 
-                hero1 = Hero(x, ground, speed, power, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
+                hero1 = Hero(x, ground, throw_back_power, jump_power, 1000, heroes, direction=RIGHT,
                              character=ALL_CHARACTERS[character1_count])
-                hero2 = Hero(x2, ground, speed2, power2, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
+                hero2 = Hero(x2, ground, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
                              character=ALL_CHARACTERS[character2_count])
 
                 health_dict = {hero1: health_1, hero2: health_2}

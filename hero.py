@@ -15,13 +15,11 @@ class Hero(pygame.sprite.Sprite):
     '''
     Класс персонаж
     '''
-    def __init__(self, x, ground, speed, power, throw_back_power, jump_power, fight_cool_down, *groups,
+    def __init__(self, x, ground, throw_back_power, jump_power, fight_cool_down, *groups,
                  direction=RIGHT, character=DED_MAXIM):
         '''
         :param x: координата х левого верхнего угла
         :param ground: у координата земли
-        :param speed: скорость персонажа за одну итерацию
-        :param power: сила удара
         :param throw_back_power: сила откидывания противника
         :param jump_power: начальная скорость прыжка в пикселях
         :param fight_cool_down: время в миллисекундах, которое игрок не сможет атаковать после использования атаки
