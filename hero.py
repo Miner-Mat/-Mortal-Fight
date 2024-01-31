@@ -66,7 +66,7 @@ class Hero(pygame.sprite.Sprite):
             self.masks_squat_l = [pygame.mask.from_surface(im) for im in self.anim_squat_l]
 
             self.anim_dead = [pygame.transform.scale(el, (0.16 * user_screen_width, 0.28 * user_screen_height))
-                               for el in ded_maxim_dead]
+                              for el in ded_maxim_dead]
             self.anim_dead_l = [pygame.transform.flip(el, True, False) for el in self.anim_dead]
             # для смерти маски уже не нужны
         elif character == VURDALAK:
