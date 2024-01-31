@@ -26,8 +26,8 @@ ded_maxim_jump = [pygame.image.load("Character_jump/Jump_3.png"), pygame.image.l
                   pygame.image.load("Character_jump/Jump_7.png"), pygame.image.load("Character_jump/Jump_8.png")]
 
 # Анимации деда Максима во время приседа
-ded_maxim_squat = [pygame.image.load('Character_squat/Squat_1.png'), pygame.image.load('Character_squat/Squat_2.png'),
-                   pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_1.png')]
+ded_maxim_squat = [pygame.image.load('Character_squat/Squat_1.png'), pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_3.png'),
+                   pygame.image.load('Character_squat/Squat_3.png'), pygame.image.load('Character_squat/Squat_2.png'), pygame.image.load('Character_squat/Squat_1.png')]
 
 # Анимации Вурдалака во время неподвижности вправо
 vurdalak_stay = [pygame.image.load("Vurdalak_st/St_1.png"),
