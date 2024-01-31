@@ -33,16 +33,12 @@ FIGHT_WINDOW = 1
 ground = int(0.94 * user_screen_height)
 
 # Определяющие положение персонажа переменные
-x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-speed = 0.015 * user_screen_height
-power = 30
+x = 0.08 * user_screen_width
 throw_back_power = 40
 jump_power = 20
 
 # Определяющие положение второго персонажа переменные
-x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-speed2 = 0.015 * user_screen_height
-power2 = 30
+x2 = 0.8 * user_screen_width
 throw_back_power2 = 40
 jump_power2 = 20
 
@@ -99,14 +95,16 @@ sound_2 = pygame.mixer.Sound("slap.mp3")  # звук попадания по п�
 
 def key_check():  # Проверка нажатий
     '''
-    Функция для проверки нажатий на клавиши и их обработки
+    Функция для проверки нажатий на клавиши и их передачи обработчикам класса Hero
     :return:
     '''
     keys = pygame.key.get_pressed()  # Обработчик нажатия клавиш
     # списки с флагами, которые передадим в классы персонажей
     res1 = []
     res2 = []
+    # в зависимости от нажатых клавиш, добавляем в списки нужные флаги
     if not ch_win_flag and not pause_flag:
+        # для первого персонажа
         if keys[pygame.K_a]:
             res1.append(LEFT)
             res1.append(RUN)
@@ -120,6 +118,7 @@ def key_check():  # Проверка нажатий
         if keys[pygame.K_f]:
             res1.append(FIGHT)
 
+        # для второго персонажа
         if keys[pygame.K_j]:
             res2.append(LEFT)
             res2.append(RUN)
@@ -142,7 +141,7 @@ def key_check():  # Проверка нажатий
         hero2.move()
 
 
-animation_delay = 100
+animation_delay = 100  # время между обновлениями анимаций героев
 UPDATE_FRAMES = pygame.USEREVENT + 1  # создаём событие для обновления кадров и присваиваем ему номер
 pygame.time.set_timer(UPDATE_FRAMES, animation_delay)
 
@@ -155,13 +154,13 @@ sound_flag = True  # флаг нынешнего состояния звука
 
 control_button_pressed = False  # открыта ли помощь по управлению
 
-clock = pygame.time.Clock()
+clock = pygame.time.Clock()  # создаём объект часов
 
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
 
     if flag == MENU_WINDOW:
-        # отрисовка всех компонентов
+        # отрисовка всех компонентов для меню
         arena = pygame.transform.scale(arens[arenas_count], (0.25 * user_screen_width, 0.3 * user_screen_height))
         character_choice = pygame.transform.scale(characters[character1_count],
                                                   (0.09 * user_screen_width, 0.3 * user_screen_height))
@@ -187,17 +186,19 @@ while running:
         screen.blit(ch1_choice_text, (0.6 * user_screen_width, 0.54 * user_screen_height))
         screen.blit(ch2_choice_text, (0.8 * user_screen_width, 0.54 * user_screen_height))
         screen.blit(control_image, control_rect)
+        # теперь компоненты, зависящие от флагов
         if sound_flag:
             screen.blit(sound_on, sound_on_rect)
         else:
             screen.blit(sound_off, sound_off_rect)
 
-        # если нажали кнопку с помощью, отрисовываем окно с показом управления
+        # если нажали кнопку с помощью с управлением, отрисовываем окно с показом управления
         if control_button_pressed:
             screen.blit(control_layout, control_layout_rect)
             screen.blit(back_image_from_control, back_image_rect_from_control)
 
     elif flag == FIGHT_WINDOW:
+        # отрисовка элементов в окне боя
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
         health.draw(screen, health_dict[hero1], health_dict[hero2])
         pygame.draw.rect(screen, (170, 0, 0), back_button)
@@ -210,7 +211,7 @@ while running:
             screen.blit(play_image, play_image_rect)
         key_check()  # вызываем проверку нажатий
 
-        heroes.draw(screen)
+        heroes.draw(screen)  # отрисовываем персонажей
 
         # проверка поражения персонажей
         if health_dict[hero1] <= 0:
@@ -235,6 +236,7 @@ while running:
     # Скрипт выхода из игры
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # далее проверки на нажатия кнопок
             if play_button.collidepoint(event.pos):
                 sound.play()
                 flag = FIGHT_WINDOW
@@ -258,6 +260,7 @@ while running:
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
 
+            # при нажатии на стрелки изменяем счетчики выбора арены и персонажа соответственно
             elif left_strelka_rect.collidepoint(event.pos):
                 sound.play()
                 arenas_count -= 1
@@ -300,15 +303,11 @@ while running:
                 sound.play()
             elif restart_button.collidepoint(event.pos):
                 sound.play()
+                # сбрасываем параметры
                 ch_win_flag = False
-                x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-                speed = 0.015 * user_screen_height
-                power = 30
-                jump_power = 20
-                x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-                speed2 = 0.015 * user_screen_height
-                power2 = 30
-                jump_power2 = 20
+                x = 0.08 * user_screen_width
+
+                x2 = 0.8 * user_screen_width
 
                 # создаем персонажей
                 heroes = pygame.sprite.Group()
@@ -318,7 +317,7 @@ while running:
                 hero2 = Hero(x2, ground, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
                              character=ALL_CHARACTERS[character2_count])
 
-                health_dict = {hero1: health_1, hero2: health_2}
+                health_dict = {hero1: health_1, hero2: health_2}  # пересоздаём словарь со здоровьем
 
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
@@ -340,15 +339,9 @@ while running:
                 flag = MENU_WINDOW
                 ch_win_flag = False
 
-                x, y = 0.08 * user_screen_width, 0.66 * user_screen_height
-                speed = 0.015 * user_screen_height
-                power = 30
-                jump_power = 20
+                x = 0.08 * user_screen_width
 
-                x2, y2 = 0.8 * user_screen_width, 0.66 * user_screen_height
-                speed2 = 0.015 * user_screen_height
-                power2 = 30
-                jump_power2 = 20
+                x2 = 0.8 * user_screen_width
 
                 # создаем персонажей
                 heroes = pygame.sprite.Group()
@@ -358,7 +351,7 @@ while running:
                 hero2 = Hero(x2, ground, throw_back_power2, jump_power2, 1000, heroes, direction=LEFT,
                              character=ALL_CHARACTERS[character2_count])
 
-                health_dict = {hero1: health_1, hero2: health_2}
+                health_dict = {hero1: health_1, hero2: health_2}  # пересоздаём словарь со здоровьем
 
                 hero1.set_enemy(hero2, health_dict)
                 hero2.set_enemy(hero1, health_dict)
@@ -366,9 +359,9 @@ while running:
             elif exit_button.collidepoint(event.pos):
                 running = False
 
-        if event.type == UPDATE_FRAMES and flag == FIGHT_WINDOW:
+        if event.type == UPDATE_FRAMES and flag == FIGHT_WINDOW:  # обновление кадров анимации персонажей
             heroes.update()
 
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:  # выход из игры
             running = False
             pygame.quit()
